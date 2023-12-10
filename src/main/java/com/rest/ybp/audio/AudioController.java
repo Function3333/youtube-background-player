@@ -1,5 +1,6 @@
 package com.rest.ybp.audio;
 
+import com.rest.ybp.common.Response;
 import com.rest.ybp.common.Result;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AudioController {
-    private AudioService audioService;
+    private final AudioService audioService;
 
     @Autowired
     public AudioController(AudioService audioService) {
@@ -15,9 +16,14 @@ public class AudioController {
     }
 
     @GetMapping("/audio")
-    public String test(@RequestParam("url") String url) {
-        System.out.println("url = " + url);
-        Result result = audioService.getAudio(url);
-        return result.getMsg();
+    public Response test(@RequestParam("url")String url, @RequestParam(value = "list", required = false)String listId) {
+        String fullUrl = createFullUrl(url, listId);
+        Result result = audioService.getAudio(fullUrl);
+
+        return new Response(result, result.getMsg());
+    }
+
+    public String createFullUrl(String youtubeId, String listId) {
+        return listId == null ? youtubeId : youtubeId + "&list=" + listId;
     }
 }

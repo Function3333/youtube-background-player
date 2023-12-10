@@ -16,7 +16,7 @@ public class AudioRepository {
         this.em = em;
     }
 
-    public String save(Audio audio) {
+    public int save(Audio audio) {
         em.persist(audio);
 
         return audio.getId();

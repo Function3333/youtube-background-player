@@ -9,7 +9,7 @@
 - youtube URL에 해당하는 mp3 생성 [v]
 - 생성한 mp3 파일 AWS S3 업로드 [v]
 - AWS S3에 업로드 mp3 파일 CDN을 통해 가져오기 [v]
-- 생성한 youtube mp3파일의 Id, Title DB에 저장 => 해당 테이블의 pk를 youtube url ID가 아닌 다른것으로 생성하고 테이블에 S3 CDN URL 필드 추가하기
+- 생성한 youtube mp3파일의 Id, Title DB에 저장 => 해당 테이블의 pk를 youtube url ID가 아닌 다른것으로 생성하고 테이블에 S3 CDN URL 필드 추가하기 [v]
 - 사용자가 생성하려는 mp3 파일이 DB에 존재 시 다시 오디오 트랙을 만드는것이 아닌 자동으로 해당 오디오 가져오기
 - mp3 파일 중 앱을 종료후 다시 내려받기 가능, 이후 오디오가 저장되는 폴더에서 cronjob으로 일정 기간 넘어간 part 파일들을 삭제하자
 - mp3 생성 중 진행상황 퍼센트로 반환

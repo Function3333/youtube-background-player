@@ -52,7 +52,7 @@ public class AudioService {
                 for(Audio audio : audioList) {
                     audioRepository.save(audio);
 
-                    Result uploadResult = bucketRepository.uploadAudio(audio.getId() + ".mp3", new File("/Users/tomo/Downloads/ybp/audio/" + audio.getId() + ".mp3"));
+                    Result uploadResult = bucketRepository.uploadAudio(audio.getYoutubeId() + ".mp3", new File("/Users/tomo/Downloads/ybp/audio/" + audio.getYoutubeId() + ".mp3"));
                     if(uploadResult == Result.UPLOAD_AUDIO_FAIL) return Result.UPLOAD_AUDIO_FAIL;
                 }
                 return Result.SUCCESS;

@@ -1,28 +1,43 @@
 package com.rest.ybp.audio;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 public class Audio {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AUDIO_ID")
-    private String id;
+    private int id;
+
+    @Column(name = "AUDIO_YOUTUBE_ID")
+    private String youtubeId;
 
     @Column(name = "AUDIO_TITLE")
-    private String title;
+    private String youtubeTitle;
 
-    public Audio(String id, String title) {
-        this.id = id;
-        this.title = title;
+    public Audio(String youtubeId, String youtubeTitle) {
+        this.youtubeId = youtubeId;
+        this.youtubeTitle = youtubeTitle;
     }
-    public String getId() {
+
+    public int getId() {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getYoutubeId() {
+        return youtubeId;
+    }
+
+    public void setYoutubeId(String youtubeId) {
+        this.youtubeId = youtubeId;
+    }
+
+    public String getYoutubeTitle() {
+        return youtubeTitle;
+    }
+
+    public void setYoutubeTitle(String youtubeTitle) {
+        this.youtubeTitle = youtubeTitle;
     }
 }
