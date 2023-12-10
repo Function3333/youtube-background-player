@@ -9,7 +9,7 @@ import javax.swing.text.html.parser.Entity;
 
 @Repository
 public class AudioRepository {
-    private EntityManager em;
+    private final EntityManager em;
 
     @Autowired
     public AudioRepository(EntityManager em) {
