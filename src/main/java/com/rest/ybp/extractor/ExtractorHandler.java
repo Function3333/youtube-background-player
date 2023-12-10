@@ -1,8 +1,6 @@
 package com.rest.ybp.extractor;
 
-import com.rest.ybp.common.YoutubeUrl;
-
-import java.io.IOException;
+import com.rest.ybp.audio.YoutubeUrl;
 
 public class ExtractorHandler {
 

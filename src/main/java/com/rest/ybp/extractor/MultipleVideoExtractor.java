@@ -1,7 +1,7 @@
 package com.rest.ybp.extractor;
 
 import com.rest.ybp.common.Result;
-import com.rest.ybp.common.YoutubeUrl;
+import com.rest.ybp.audio.YoutubeUrl;
 import com.sapher.youtubedl.DownloadProgressCallback;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLRequest;

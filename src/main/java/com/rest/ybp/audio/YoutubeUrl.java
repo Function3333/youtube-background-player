@@ -1,5 +1,6 @@
-package com.rest.ybp.common;
+package com.rest.ybp.audio;
 
+import com.rest.ybp.common.VideoType;
 import lombok.Getter;
 import lombok.Setter;
 

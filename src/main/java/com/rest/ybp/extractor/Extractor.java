@@ -1,12 +1,9 @@
 package com.rest.ybp.extractor;
 
 import com.rest.ybp.common.Result;
-import com.rest.ybp.common.YoutubeUrl;
+import com.rest.ybp.audio.YoutubeUrl;
 
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public interface Extractor {
     public static final String path = Paths.get(System.getProperty("user.dir"), "audio").toString();

@@ -1,26 +1,17 @@
 package com.rest.ybp.audio;
 
 import com.rest.ybp.common.Result;
-import com.rest.ybp.common.YoutubeUrl;
 import com.rest.ybp.extractor.Extractor;
 import com.rest.ybp.extractor.ExtractorHandler;
 import com.rest.ybp.s3.BucketRepository;
-import com.sapher.youtubedl.DownloadProgressCallback;
-import com.sapher.youtubedl.YoutubeDL;
-import com.sapher.youtubedl.YoutubeDLRequest;
-import com.sapher.youtubedl.YoutubeDLResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)

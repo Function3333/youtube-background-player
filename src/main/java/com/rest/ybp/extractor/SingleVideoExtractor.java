@@ -1,12 +1,9 @@
 package com.rest.ybp.extractor;
 
 import com.rest.ybp.common.Result;
-import com.rest.ybp.common.YoutubeUrl;
-import com.rest.ybp.s3.BucketRepository;
+import com.rest.ybp.audio.YoutubeUrl;
 import com.sapher.youtubedl.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.util.*;
 
 public class SingleVideoExtractor implements Extractor {
