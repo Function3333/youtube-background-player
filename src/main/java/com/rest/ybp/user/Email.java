@@ -7,13 +7,20 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Random;
+import java.util.UUID;
 
 public class Email {
     private static Properties emailProperties;
+    private static Properties smtpProperties;
+    private static final int CERTIFICATION_NUMBER_LENGTH = 6;
 
-    public Result sendEmail(String receiverEmail) throws IOException {
+    public Email() throws IOException {
         initProperties();
-        Properties smtpProperties = createSmtpProperties();
+        initSmtpProperties();
+    }
+
+    public Result sendEmail(String receiverEmail, String certificationNumber) throws IOException {
         Session session = createSession(smtpProperties);
 
         MimeMessage message = new MimeMessage(session);
@@ -22,7 +29,7 @@ public class Email {
             message.setFrom(new InternetAddress(emailProperties.getProperty("email.id")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(receiverEmail));
             message.setSubject("test Email");
-            message.setText("안녕하세요 테스트입니다.");
+            message.setText("인증번호 : " + certificationNumber);
 
             Transport.send(message);
         } catch (Exception e) {
@@ -38,25 +45,32 @@ public class Email {
         emailProperties.load(this.getClass().getResourceAsStream("/email.properties"));
     }
 
-    public Properties createSmtpProperties() {
-        Properties smtpProperties = new Properties();
+    public void initSmtpProperties() {
+        smtpProperties = new Properties();
         smtpProperties.put("mail.smtp.host","smtp.naver.com");
         smtpProperties.put("mail.smtp.port","465");
         smtpProperties.put("mail.smtp.ssl.enable", "true");
         smtpProperties.put("mail.smtp.ssl.trust", "smtp.naver.com");
         smtpProperties.put("mail.smtp.auth", "true");
-
-        return smtpProperties;
     }
 
     public Session createSession(Properties smtpProperties) {
-        Session session = Session.getDefaultInstance(smtpProperties, new Authenticator() {
+
+        return Session.getDefaultInstance(smtpProperties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(emailProperties.getProperty("email.id"), emailProperties.getProperty("email.password"));
             }
         });
+    }
 
-        return session;
+    public static String createCertificationNumber() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0;  i < CERTIFICATION_NUMBER_LENGTH; i++) {
+            sb.append(random.nextInt(9));
+        }
+        return sb.toString();
     }
 }
