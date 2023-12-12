@@ -48,6 +48,12 @@ dependencies {
 	//javaMail
 	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	//jjwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 }
 
 tasks.named('test') {

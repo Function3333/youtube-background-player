@@ -18,25 +18,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public int saveUser(User user) {
-        return userRepository.save(user);
-    }
-    @Transactional
-    public void deleteUser(User user) {
-        userRepository.delete(user);
-    }
-
-    public User getUserById(int id) {
-        return userRepository.getUserById(id);
-    }
-
     public User getUserByName(String name) {
         return userRepository.getUserByName(name);
     }
 
     public User getUserByEmail(String email){
         return userRepository.getUserByEmail(email);
+    }
+
+    @Transactional
+    public Result signup(String name, String password, String email) {
+        User user = new User(name, password, email);
+        int result = userRepository.save(user);
+
+        return result == 0 ? Result.SIGNUP_FAIL : Result.SUCCESS;
     }
 
     public Result validateName(String name) {

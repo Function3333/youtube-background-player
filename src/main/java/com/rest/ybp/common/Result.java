@@ -8,6 +8,7 @@ public enum Result {
     DUPLICATE_NAME("중복된 아이디입니다."),
     DUPLICATE_EMAIL("중복된 이메일입니다."),
     VERIFY_EMAIL_FAIL("이메일 인증에 실패했습니다."),
+    SIGNUP_FAIL("회원가입에 실패했습니다"),
     SUCCESS("성공하였습니다.");
 
     private final String msg;

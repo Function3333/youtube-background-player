@@ -1,4 +1,4 @@
-package com.rest.ybp.user;
+package com.rest.ybp.utils;
 
 import com.rest.ybp.common.Result;
 
