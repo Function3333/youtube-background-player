@@ -18,6 +18,8 @@ import java.util.Map;
 public class AudioService {
     private final AudioRepository audioRepository;
     private final BucketRepository bucketRepository;
+    private static final String bucketUrlPrefix = "https://tomo-audio-bucket.s3.ap-northeast-2.amazonaws.com/";
+    private static final String bucketUrlPostfix = ".mp3";
 
     @Autowired
     public AudioService(AudioRepository audioRepository, BucketRepository bucketRepository) {
@@ -61,7 +63,7 @@ public class AudioService {
         for(String id : resultMap.keySet()) {
             String title = resultMap.get(id);
 
-            Audio audio = new Audio(id, title);
+            Audio audio = new Audio(id, title, bucketUrlPrefix + id + bucketUrlPostfix);
             audioList.add(audio);
         }
 

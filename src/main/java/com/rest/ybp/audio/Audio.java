@@ -16,13 +16,21 @@ public class Audio {
     @Column(name = "AUDIO_TITLE")
     private String youtubeTitle;
 
-    public Audio(String youtubeId, String youtubeTitle) {
+    @Column(name = "AUDIO_URL")
+    private String audioUrl;
+
+    public Audio(String youtubeId, String youtubeTitle, String audioUrl) {
         this.youtubeId = youtubeId;
         this.youtubeTitle = youtubeTitle;
+        this.audioUrl = audioUrl;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getYoutubeId() {
@@ -39,5 +47,13 @@ public class Audio {
 
     public void setYoutubeTitle(String youtubeTitle) {
         this.youtubeTitle = youtubeTitle;
+    }
+
+    public String getAudioUrl() {
+        return audioUrl;
+    }
+
+    public void setAudioUrl(String audioUrl) {
+        this.audioUrl = audioUrl;
     }
 }

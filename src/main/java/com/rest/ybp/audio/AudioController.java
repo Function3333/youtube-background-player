@@ -20,7 +20,7 @@ public class AudioController {
         String fullUrl = createFullUrl(url, listId);
         Result result = audioService.getAudio(fullUrl);
 
-        return new Response(result, result.getMsg());
+        return new Response(result.toString(), result.getMsg());
     }
 
     public String createFullUrl(String youtubeId, String listId) {
