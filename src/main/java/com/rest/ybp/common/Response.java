@@ -2,19 +2,20 @@ package com.rest.ybp.common;
 
 public class Response {
 
-    private Result status;
-    private String msg;
+    private String result;
+    private String data;
 
-    public Response(Result status, String msg) {
-        this.status = status;
-        this.msg = msg;
+
+    public Response(String result, String data) {
+        this.result = result;
+        this.data = data;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getResult() {
+        return result;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public String getData() {
+        return data;
     }
 }

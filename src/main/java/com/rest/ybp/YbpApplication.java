@@ -1,7 +1,5 @@
 package com.rest.ybp;
 
-import com.rest.ybp.extractor.Extractor;
-import com.rest.ybp.extractor.SingleVideoExtractor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
