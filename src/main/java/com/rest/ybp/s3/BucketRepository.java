@@ -41,7 +41,7 @@ public class BucketRepository {
             System.out.printf("[%s] upload complete%n", request.getKey());
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.UPLOAD_AUDIO_FAIL;
+            return Result.POST_AUDIO_FAIL;
         }
         return Result.SUCCESS;
     }

@@ -10,7 +10,7 @@ public class Audio {
     @Column(name = "AUDIO_ID")
     private int id;
 
-    @Column(name = "AUDIO_YOUTUBE_ID")
+    @Column(name = "AUDIO_YOUTUBE_ID", unique = true)
     private String youtubeId;
 
     @Column(name = "AUDIO_TITLE")
@@ -18,6 +18,9 @@ public class Audio {
 
     @Column(name = "AUDIO_URL")
     private String audioUrl;
+
+    public Audio() {
+    }
 
     public Audio(String youtubeId, String youtubeTitle, String audioUrl) {
         this.youtubeId = youtubeId;

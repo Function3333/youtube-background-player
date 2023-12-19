@@ -2,13 +2,11 @@ package com.rest.ybp.audio;
 
 import com.rest.ybp.common.Result;
 import com.rest.ybp.extractor.Extractor;
-import com.rest.ybp.extractor.ExtractorHandler;
 import com.rest.ybp.s3.BucketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,42 +16,34 @@ import java.util.Map;
 public class AudioService {
     private final AudioRepository audioRepository;
     private final BucketRepository bucketRepository;
-    private static final String bucketUrlPrefix = "https://tomo-audio-bucket.s3.ap-northeast-2.amazonaws.com/";
-    private static final String bucketUrlPostfix = ".mp3";
+    private final Extractor extractor;
+
+    private static final String BUCKET_URL_PREFIX = "https://tomo-audio-bucket.s3.ap-northeast-2.amazonaws.com/";
+    private static final String BUCKET_URL_POSTFIX = ".mp3";
 
     @Autowired
-    public AudioService(AudioRepository audioRepository, BucketRepository bucketRepository) {
+    public AudioService(AudioRepository audioRepository, BucketRepository bucketRepository, Extractor extractor) {
         this.audioRepository = audioRepository;
         this.bucketRepository = bucketRepository;
+        this.extractor = extractor;
+    }
+
+    public Audio getAudio(String audioId) {
+        Audio audio = null;
+        try {
+            audio = audioRepository.getById(Integer.parseInt(audioId));
+        } catch (NumberFormatException e) {
+            System.out.println("[AudioService] getAudio Error");
+            e.printStackTrace();
+        }
+        return audio;
     }
 
     @Transactional
-    public Result getAudio(String url) {
+    public Result postAudio(String url) {
         YoutubeUrl youtubeUrl = new YoutubeUrl(url);
 
-        Extractor extractor = ExtractorHandler.getExtractor(youtubeUrl);
-        Result extractResult = extractor.extractAudio(youtubeUrl);
-
-        if(extractResult == Result.SUCCESS) {
-            extractor.extractId(youtubeUrl);
-            extractor.extractTitle(youtubeUrl);
-            extractor.generateResultMap(youtubeUrl);
-
-            if(youtubeUrl.isAllFieldNotNull()) {
-                List<Audio> audioList = youtubeUrltoAudioList(youtubeUrl);
-
-                for(Audio audio : audioList) {
-                    audioRepository.save(audio);
-
-                    Result uploadResult = bucketRepository.uploadAudio(audio.getYoutubeId() + ".mp3", new File("/Users/tomo/Downloads/ybp/audio/" + audio.getYoutubeId() + ".mp3"));
-                    if(uploadResult == Result.UPLOAD_AUDIO_FAIL) return Result.UPLOAD_AUDIO_FAIL;
-                }
-                return Result.SUCCESS;
-            } else  {
-                return Result.EXTRACT_URL_FAIL;
-            }
-        }
-        return Result.EXTRACT_AUDIO_FAIL;
+        return extractor.uploadAudio(youtubeUrl);
     }
 
     public List<Audio> youtubeUrltoAudioList(YoutubeUrl youtubeUrl) {
@@ -63,7 +53,7 @@ public class AudioService {
         for(String id : resultMap.keySet()) {
             String title = resultMap.get(id);
 
-            Audio audio = new Audio(id, title, bucketUrlPrefix + id + bucketUrlPostfix);
+            Audio audio = new Audio(id, title, BUCKET_URL_PREFIX + id + BUCKET_URL_POSTFIX);
             audioList.add(audio);
         }
 
