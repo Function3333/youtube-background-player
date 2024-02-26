@@ -46,6 +46,17 @@ public class AudioService {
         return extractor.uploadAudio(youtubeUrl);
     }
 
+    public List<String> getAudioByFullUrl(String url) {
+        YoutubeUrl youtubeUrl = new YoutubeUrl(url);
+        extractor.extractId(youtubeUrl);
+
+        return youtubeUrl.getIdList();
+    }
+
+    public Audio getByYoutubeId(String youtubeId) {
+        return audioRepository.getByYoutubeId(youtubeId);
+    }
+
     public List<Audio> youtubeUrltoAudioList(YoutubeUrl youtubeUrl) {
         Map<String, String> resultMap = youtubeUrl.getResultMap();
         List<Audio> audioList = new ArrayList<>();

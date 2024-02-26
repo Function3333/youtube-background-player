@@ -1,7 +1,9 @@
 package com.rest.ybp.audio;
 
+import com.rest.ybp.playlist.Playlist;
 import jakarta.persistence.*;
-import lombok.Getter;
+
+import java.util.List;
 
 @Entity
 public class Audio {
@@ -19,6 +21,9 @@ public class Audio {
     @Column(name = "AUDIO_URL")
     private String audioUrl;
 
+    @OneToMany(mappedBy = "audio")
+    private List<Playlist> playList;
+
     public Audio() {
     }
 
@@ -32,31 +37,19 @@ public class Audio {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getYoutubeId() {
         return youtubeId;
-    }
-
-    public void setYoutubeId(String youtubeId) {
-        this.youtubeId = youtubeId;
     }
 
     public String getYoutubeTitle() {
         return youtubeTitle;
     }
 
-    public void setYoutubeTitle(String youtubeTitle) {
-        this.youtubeTitle = youtubeTitle;
-    }
-
     public String getAudioUrl() {
         return audioUrl;
     }
 
-    public void setAudioUrl(String audioUrl) {
-        this.audioUrl = audioUrl;
+    public List<Playlist> getPlayList() {
+        return playList;
     }
 }

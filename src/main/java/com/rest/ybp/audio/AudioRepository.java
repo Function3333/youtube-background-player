@@ -2,11 +2,9 @@ package com.rest.ybp.audio;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.parser.Entity;
 
 @Repository
 public class AudioRepository {

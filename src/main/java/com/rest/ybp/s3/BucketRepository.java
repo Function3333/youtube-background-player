@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.rest.ybp.common.Result;
 
@@ -43,6 +44,19 @@ public class BucketRepository {
             e.printStackTrace();
             return Result.POST_AUDIO_FAIL;
         }
+        return Result.SUCCESS;
+    }
+
+    public Result deleteAudio(String audioId) {
+        try {
+            DeleteObjectRequest request = new DeleteObjectRequest(awsConfig.getProperty("bucketName"), audioId);
+            client.deleteObject(request);
+            System.out.printf("[%s] delete complete%n", request.getKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.DELETE_AUDIO_FAIL;
+        }
+
         return Result.SUCCESS;
     }
 }

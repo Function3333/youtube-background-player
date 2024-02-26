@@ -33,27 +33,27 @@ public class JwtManager {
                 .signWith(secretKey)
                 .subject("AccessToken")
                 .expiration(getRefreshTokenValidateTime())
-                .claim("user", mapper.writeValueAsString(userName))
+                .claim("userName", mapper.writeValueAsString(userName))
                 .compact();
     }
 
-    public User parseJwtToken(String jwt) {
+    public String parseAccessToken(String jwt) {
         ObjectMapper mapper = new ObjectMapper();
+        String userName = null;
 
         try {
-            Object o = Jwts
+            userName = (String) Jwts
                     .parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(jwt)
                     .getPayload()
-                    .get("user");
-            System.out.println(o.toString());
-            return mapper.readValue(o.toString(), User.class);
+                    .get("userName");
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+
+        return userName;
     }
 
     public Date getAccessTokenValidateTime() {
