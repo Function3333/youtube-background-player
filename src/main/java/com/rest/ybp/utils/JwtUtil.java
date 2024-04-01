@@ -2,7 +2,6 @@ package com.rest.ybp.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.ybp.user.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
@@ -10,7 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
-public class JwtManager {
+public class JwtUtil {
     private static final SecretKey secretKey = Jwts.SIG.HS256.key().build();
     private static final int ACCESS_TOKEN_VALIDATE_TIME = 30; //Minute
     private static final int REFRESH_TOKEN_VALIDATE_TIME = 3; //Day

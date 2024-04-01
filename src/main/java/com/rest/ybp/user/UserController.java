@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Response;
 import com.rest.ybp.common.Result;
-import com.rest.ybp.utils.Email;
+import com.rest.ybp.utils.EmailUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,9 +26,9 @@ public class UserController {
 
     @GetMapping("/login/verifyEmail")
     public Response sendVerifyEmail(@RequestParam("inputEmail") String inputEmail , HttpSession session) throws IOException {
-        String certificationNumber = Email.createCertificationNumber();
+        String certificationNumber = EmailUtil.createCertificationNumber();
 
-        Email email = new Email();
+        EmailUtil email = new EmailUtil();
         Result result = email.sendEmail(inputEmail, certificationNumber);
 
         if(result == Result.SUCCESS) {

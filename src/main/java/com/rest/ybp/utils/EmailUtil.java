@@ -8,14 +8,13 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
-import java.util.UUID;
 
-public class Email {
+public class EmailUtil {
     private static Properties emailProperties;
     private static Properties smtpProperties;
     private static final int CERTIFICATION_NUMBER_LENGTH = 6;
 
-    public Email() throws IOException {
+    public EmailUtil() throws IOException {
         initProperties();
         initSmtpProperties();
     }

@@ -2,7 +2,6 @@ package com.rest.ybp.audio;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
@@ -11,7 +10,6 @@ public class AudioRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    @Autowired
     public AudioRepository(EntityManager em) {
         this.em = em;
         this.queryFactory = new JPAQueryFactory(em);

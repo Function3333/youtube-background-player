@@ -1,4 +1,4 @@
-package com.rest.ybp.s3;
+package com.rest.ybp.utils;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -18,16 +18,16 @@ import java.io.InputStream;
 import java.util.Properties;
 
 @Component
-public class BucketRepository {
+public class s3Util {
 
     private final AmazonS3 client;
     private final Properties awsConfig = new Properties();
 
-    public BucketRepository() throws IOException {
-        InputStream stream = this.getClass().getResourceAsStream("/aws.properties");
+    public s3Util() throws IOException {
+        InputStream stream = this.getClass().getResourceAsStream("/config.properties");
         awsConfig.load(stream);
 
-        AWSCredentials awsCredentials = new BasicAWSCredentials(awsConfig.getProperty("accessKey"), awsConfig.getProperty("privateKey"));
+        AWSCredentials awsCredentials = new BasicAWSCredentials(awsConfig.getProperty("aws.accessKey"), awsConfig.getProperty("aws.privateKey"));
         client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
@@ -37,7 +37,8 @@ public class BucketRepository {
 
     public Result uploadAudio(String audioId, File file) {
         try {
-            PutObjectRequest request = new PutObjectRequest(awsConfig.getProperty("bucketName"), audioId, file);
+            PutObjectRequest request = new PutObjectRequest(awsConfig.getProperty("aws.bucketName"), audioId, file);
+            System.out.println("audioId : " + audioId);
             client.putObject(request);
             System.out.printf("[%s] upload complete%n", request.getKey());
         } catch (Exception e) {

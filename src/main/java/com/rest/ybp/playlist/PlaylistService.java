@@ -1,18 +1,19 @@
 package com.rest.ybp.playlist;
 
-import com.rest.ybp.s3.BucketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.rest.ybp.utils.s3Util;
 
 @Service
 @Transactional(readOnly = true)
 public class PlaylistService {
     private PlaylistRepository playlistRepository;
-    private BucketRepository bucketRepository;
+    private s3Util bucketRepository;
 
     @Autowired
-    public PlaylistService(PlaylistRepository playlistRepository, BucketRepository bucketRepository) {
+    public PlaylistService(PlaylistRepository playlistRepository, s3Util bucketRepository) {
         this.playlistRepository = playlistRepository;
         this.bucketRepository = bucketRepository;
     }

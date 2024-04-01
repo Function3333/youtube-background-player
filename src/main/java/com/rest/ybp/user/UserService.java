@@ -2,14 +2,12 @@ package com.rest.ybp.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rest.ybp.common.Result;
-import com.rest.ybp.utils.JwtManager;
+import com.rest.ybp.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -17,10 +15,10 @@ import java.util.Map;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtManager jwtManager;
+    private final JwtUtil jwtManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, JwtManager jwtManager) {
+    public UserService(UserRepository userRepository, JwtUtil jwtManager) {
         this.userRepository = userRepository;
         this.jwtManager = jwtManager;
     }

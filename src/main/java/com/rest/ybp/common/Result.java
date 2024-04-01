@@ -14,6 +14,7 @@ public enum Result {
     GENERATE_TOKEN_FAIL("FAIL","토근 발급에 실패하였습니다."),
     PARSE_TOKEN_FAIL("FAIL","유효하지 않은 토큰입니다."),
     LOGIN_FAIL("FAIL","로그인 정보가 올바르지 않습니다."),
+    SEARCH_FAIL("FAIL","검색정보를 가져오는데 실패했습니다."),
     SUCCESS("SUCCESS","성공하였습니다.");
 
     private final String status;
