@@ -38,7 +38,7 @@ public class AudioController {
         }
     }
 
-    //인터셉터 적용해서 미리 token 검사한 후 로직 실행하게 변경
+    
     @PostMapping("/audio")
     public Response postAudio(@RequestParam("videoId") String videoId
                                 ,@RequestParam("title") String title
@@ -47,6 +47,7 @@ public class AudioController {
         Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
         Result result = audioService.postAudio(youtube);
 
+        //인터셉터 적용해서 미리 token 검사한 후 로직 실행하게 변경
         // if(result == Result.SUCCESS) {
         //     String userName = jwtManager.parseAccessToken(accessToken);
         //     User user = userService.getUserByName(userName);
@@ -64,13 +65,6 @@ public class AudioController {
         // }
 
         return new Response(result.getStatus(), result.getMsg());
-    }
-
-    @GetMapping("/getTime")
-    public String test() {
-        String videoId = "Z8sv4jX2Av0";
-        System.out.println(audioService.getVideoLength(videoId));
-        return "test";
     }
 
     public String createFullUrl(String youtubeId, String listId) {
