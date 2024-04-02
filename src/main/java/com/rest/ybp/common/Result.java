@@ -4,6 +4,7 @@ public enum Result {
     EXTRACT_URL_FAIL("FAIL", "유효하지 않은 URL입니다."),
     EXTRACT_AUDIO_FAIL("FAIL","음원 추출에 실패했습니다."),
     POST_AUDIO_FAIL("FAIL","음원 업로드에 실패했습니다."),
+    MAXIMUM_VIDEO_LENGTH_FAIL("FAIL","10분 이하의 영상만 추출 가능합니다."),
     DELETE_AUDIO_FAIL("FAIL","음원 삭제에 실패했습니다."),
     GET_AUDIO_FAIL("FAIL","음원을 가져오는데 실패하였습니다."),
     SEND_MAIL_FAIL("FAIL","메일 전송에 실피했습니다."),

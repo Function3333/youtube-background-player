@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Response;
 import com.rest.ybp.common.Result;
-import com.rest.ybp.playlist.Playlist;
 import com.rest.ybp.playlist.PlaylistService;
-
-import com.rest.ybp.user.User;
 import com.rest.ybp.user.UserService;
 import com.rest.ybp.utils.JwtUtil;
 import com.rest.ybp.youtube.Youtube;
@@ -15,7 +12,6 @@ import com.rest.ybp.youtube.Youtube;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 public class AudioController {
@@ -68,6 +64,13 @@ public class AudioController {
         // }
 
         return new Response(result.getStatus(), result.getMsg());
+    }
+
+    @GetMapping("/getTime")
+    public String test() {
+        String videoId = "Z8sv4jX2Av0";
+        System.out.println(audioService.getVideoLength(videoId));
+        return "test";
     }
 
     public String createFullUrl(String youtubeId, String listId) {

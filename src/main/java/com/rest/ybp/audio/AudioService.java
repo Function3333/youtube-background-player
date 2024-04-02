@@ -1,9 +1,14 @@
 package com.rest.ybp.audio;
 
 import com.rest.ybp.common.Result;
-import com.rest.ybp.extractor.Extractor;
-import com.rest.ybp.utils.s3Util;
+import com.rest.ybp.utils.S3Util;
+import com.rest.ybp.utils.YoutubeDlUtil;
 import com.rest.ybp.youtube.Youtube;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,22 +16,66 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class AudioService {
+    private static String extractPath = Paths.get(System.getProperty("user.dir"), "audio").toString();
+    private static Properties configProperties;
+
     private final AudioRepository audioRepository;
-    private final s3Util bucketRepository;
-    private final Extractor extractor;
+    private final S3Util S3Utils;
+    private final YoutubeDlUtil extractor;
 
-    private static final String BUCKET_URL_PREFIX = "https://tomo-audio-bucket.s3.ap-northeast-2.amazonaws.com/";
-    private static final String BUCKET_URL_POSTFIX = ".mp3";
-
-
-    public AudioService(AudioRepository audioRepository, s3Util bucketRepository, Extractor extractor) {
+    public AudioService(AudioRepository audioRepository, S3Util S3Utils, YoutubeDlUtil extractor) throws IOException {
         this.audioRepository = audioRepository;
-        this.bucketRepository = bucketRepository;
+        this.S3Utils = S3Utils;
         this.extractor = extractor;
+
+        configProperties = new Properties();
+        configProperties.load(this.getClass().getResourceAsStream("/config.properties"));
+    }
+
+    @Transactional
+    public Result postAudio(Youtube youtube) {
+        int maximumVideoLength = 60 * 10;
+        int videoLength = getVideoLength(youtube.getVideoId());
+
+        if(videoLength <= maximumVideoLength) {
+            return uploadAudio(youtube);
+        }
+        return Result.MAXIMUM_VIDEO_LENGTH_FAIL;
+    }
+
+    public Result uploadAudio(Youtube youtube) {
+        Audio findByYoutubeId = audioRepository.getByYoutubeId(youtube.getVideoId());
+
+        if(findByYoutubeId == null) {
+            Result extractAudioResult = extractor.extractAudio(youtube.getVideoId());
+
+            if(extractAudioResult == Result.SUCCESS) {
+                Result uploadResult = S3Utils.uploadAudio(youtube.getVideoId() + ".mp3", 
+                        new File(extractPath + "/" + youtube.getVideoId() + ".mp3"));
+                
+                if(uploadResult == Result.SUCCESS) {
+                    Audio audio = new Audio(youtube.getVideoId()
+                                            ,youtube.getVideoTitle()
+                                            ,configProperties.getProperty("aws.bucketUrlPrefix") + youtube.getVideoId() + configProperties.getProperty("aws.bucketUrlPostfix"));
+                                            
+                    audioRepository.save(audio);
+                    return Result.SUCCESS;
+                }
+            }
+        } else {
+            //audio entity and file already exits in s3, db
+            return Result.SUCCESS;
+        }
+        return Result.EXTRACT_AUDIO_FAIL;
+    }    
+
+    public int getVideoLength(String videoId) {
+        return extractor.getVideoLength(videoId);
     }
 
     public Audio getAudio(String audioId) {
         Audio audio = null;
+        
         try {
             audio = audioRepository.getById(Integer.parseInt(audioId));
         } catch (NumberFormatException e) {
@@ -36,33 +85,7 @@ public class AudioService {
         return audio;
     }
 
-    @Transactional
-    public Result postAudio(Youtube youtube) {
-        return extractor.uploadAudio(youtube);
-    }
-
-    // public List<String> getAudioByFullUrl(String url) {
-    //     Youtube youtubeUrl = new Youtube(url);
-    //     extractor.extractId(youtubeUrl);
-
-    //     return youtubeUrl.getIdList();
-    // }
-
     public Audio getByYoutubeId(String youtubeId) {
         return audioRepository.getByYoutubeId(youtubeId);
     }
-
-    // public List<Audio> youtubeUrltoAudioList(Youtube youtubeUrl) {
-    //     Map<String, String> resultMap = youtubeUrl.getResultMap();
-    //     List<Audio> audioList = new ArrayList<>();
-
-    //     for(String id : resultMap.keySet()) {
-    //         String title = resultMap.get(id);
-
-    //         Audio audio = new Audio(id, title, BUCKET_URL_PREFIX + id + BUCKET_URL_POSTFIX);
-    //         audioList.add(audio);
-    //     }
-
-    //     return audioList;
-    // }
 }

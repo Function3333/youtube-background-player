@@ -18,12 +18,12 @@ import java.io.InputStream;
 import java.util.Properties;
 
 @Component
-public class s3Util {
+public class S3Util {
 
     private final AmazonS3 client;
     private final Properties awsConfig = new Properties();
 
-    public s3Util() throws IOException {
+    public S3Util() throws IOException {
         InputStream stream = this.getClass().getResourceAsStream("/config.properties");
         awsConfig.load(stream);
 
