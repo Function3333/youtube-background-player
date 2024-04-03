@@ -41,3 +41,6 @@ out/
 
 ### properties ###
 *.properties
+
+### class ###
+JwtUtil.java

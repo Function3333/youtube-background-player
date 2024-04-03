@@ -3,7 +3,7 @@ package com.rest.ybp.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rest.ybp.common.Result;
 import com.rest.ybp.utils.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,22 +13,12 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 public class UserService {
-
     private final UserRepository userRepository;
     private final JwtUtil jwtManager;
 
-    @Autowired
     public UserService(UserRepository userRepository, JwtUtil jwtManager) {
         this.userRepository = userRepository;
         this.jwtManager = jwtManager;
-    }
-
-    public User getUserByName(String name) {
-        return userRepository.getUserByName(name);
-    }
-
-    public User getUserByEmail(String email){
-        return userRepository.getUserByEmail(email);
     }
 
     @Transactional
@@ -53,11 +43,26 @@ public class UserService {
 
             if(userPassword.equals(password)) {
                 tokenMap = new HashMap<>();
-                tokenMap.put("accessToken", jwtManager.getAccessToken(findByName.getName()));
+                tokenMap.put("accessToken", jwtManager.generateAccessToken(findByName.getName()));
                 tokenMap.put("refreshToken", jwtManager.getRefreshToken(findByName.getName()));
             }
         }
         return tokenMap;
+    }
+
+    public boolean isTokenMatchUser(String accessToken) {
+        String userName = jwtManager.parseAccessToken(accessToken);
+        User user = getUserByName(userName);
+
+        return (user != null) ? true : false; 
+    }
+
+    public User getUserByName(String name) {
+        return userRepository.getUserByName(name);
+    }
+
+    public User getUserByEmail(String email){
+        return userRepository.getUserByEmail(email);
     }
 
     public Result validateName(String name) {

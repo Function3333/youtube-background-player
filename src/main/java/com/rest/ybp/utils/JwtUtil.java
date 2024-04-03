@@ -14,7 +14,7 @@ public class JwtUtil {
     private static final int ACCESS_TOKEN_VALIDATE_TIME = 30; //Minute
     private static final int REFRESH_TOKEN_VALIDATE_TIME = 3; //Day
 
-    public String getAccessToken(String userName) throws JsonProcessingException {
+    public String generateAccessToken(String userName) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
         return Jwts.builder()
@@ -37,9 +37,7 @@ public class JwtUtil {
     }
 
     public String parseAccessToken(String jwt) {
-        ObjectMapper mapper = new ObjectMapper();
         String userName = null;
-
         try {
             userName = (String) Jwts
                     .parser()

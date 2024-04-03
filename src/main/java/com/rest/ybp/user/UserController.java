@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Response;
 import com.rest.ybp.common.Result;
 import com.rest.ybp.utils.EmailUtil;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,7 +20,6 @@ public class UserController {
     private static final String EMAIL_SESSION_KEY= "EMAIL";
     private static final int SESSION_DURATION= 30;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
