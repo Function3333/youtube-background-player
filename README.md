@@ -40,5 +40,6 @@
 - 오디오 추출까지 남은시간 or 퍼센트 출력
 
 ## 오늘 코딩 시작 지점
-- 인터셉터, 회원기능부터 구현하기
+- JwtUtil의 isTokenValide 메서드에서 refresh token 파싱 못하는 에러 해결
+- 위 에러 해결 후 refresh token이 valide하면 refresh token만으로 다시 access token을 발급하는 UserController method 만들기
 

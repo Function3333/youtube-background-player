@@ -14,11 +14,11 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final JwtUtil jwtManager;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, JwtUtil jwtManager) {
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
-        this.jwtManager = jwtManager;
+        this.jwtUtil = jwtUtil;
     }
 
     @Transactional
@@ -35,26 +35,37 @@ public class UserService {
 
     @Transactional
     public Map<String, String> login(String name, String password) throws JsonProcessingException {
-        User findByName = userRepository.getUserByName(name);
+        User user = userRepository.getUserByName(name);
         Map<String, String> tokenMap = null;
 
-        if(findByName != null) {
-            String userPassword = findByName.getPassword();
+        if(user != null) {
+            String userPassword = user.getPassword();
 
             if(userPassword.equals(password)) {
                 tokenMap = new HashMap<>();
-                tokenMap.put("accessToken", jwtManager.generateAccessToken(findByName.getName()));
-                tokenMap.put("refreshToken", jwtManager.getRefreshToken(findByName.getName()));
+                tokenMap.put("accessToken", jwtUtil.generateAccessToken(user.getName()));
+                tokenMap.put("refreshToken", jwtUtil.generateRefreshToken(user.getName()));
             }
         }
         return tokenMap;
     }
 
-    public boolean isTokenMatchUser(String accessToken) {
-        String userName = jwtManager.parseAccessToken(accessToken);
-        User user = getUserByName(userName);
+    public String generateAccessTokenByRefreshToken(String refreshToken) {
+        String accessToken = null;
 
-        return (user != null) ? true : false; 
+        if(isTokenMatchUser(refreshToken)) {
+            String userName = jwtUtil.parseToken(refreshToken);
+            accessToken = jwtUtil.generateAccessToken(userName);
+        }
+
+        return accessToken;
+    }
+
+    public boolean isTokenMatchUser(String accessToken) {
+        String userName = jwtUtil.parseToken(accessToken);
+        User user = getUserByName(userName);    
+        
+        return (user != null) ? true : false;
     }
 
     public User getUserByName(String name) {

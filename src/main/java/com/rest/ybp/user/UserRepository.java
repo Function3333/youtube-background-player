@@ -37,11 +37,19 @@ public class UserRepository {
 
     public User getUserByName(String name) {
         QUser qUser = QUser.user;
-
-        return queryFactory
+        
+        User user = null;
+        try {
+            if(name != null) {
+                user = queryFactory
                 .selectFrom(qUser)
                 .where(qUser.name.eq(name))
-                .fetchFirst();
+                .fetchFirst();    
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 
     public User getUserByEmail(String email) {

@@ -16,34 +16,54 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor{
+    private static final String ACCESS_TOKEN_HEADER_KEY = "ACCESS_TOKEN";
+    private static final String REFRESH_TOKEN_HEADER_KEY = "REFRESH_TOKEN";
     private final UserService userService;    
-    
-    public JwtInterceptor(UserService userService) {
+    private final JwtUtil jwtUtil;
+
+    public JwtInterceptor(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+    
+    public boolean isTokenNullOrEmpty(String token) {
+        if(token == null || token.isEmpty()) return true;
+        return false;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {    
-        System.out.println("run interceptor");
-
-        boolean result = false;
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {    
+        Result result = null;
+        boolean interceptorResult = false;
         ObjectMapper mapper = new ObjectMapper();
         
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        try {
-            String accessToken = request.getHeader("AUTHORIZATION");
+        String accessToken = request.getHeader(ACCESS_TOKEN_HEADER_KEY);
+        String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_KEY);
 
-            if(accessToken != null) {
-                result = userService.isTokenMatchUser(accessToken);
-            }else {
-                Response failResponse = new Response(Result.EMPTY_TOKEN_FAIL.getStatus(), Result.EMPTY_TOKEN_FAIL.getMsg());
-                response.getWriter().write(mapper.writeValueAsString(failResponse));
-            }           
-        } catch (IOException e) {
-            e.printStackTrace();
+        System.out.println("accessToken : " + accessToken);
+        System.out.println("refreshToken : " + refreshToken);
+
+        if(isTokenNullOrEmpty(accessToken) || isTokenNullOrEmpty(refreshToken)) {
+            result = Result.EMPTY_TOKEN_FAIL;
+        } else {
+            if(jwtUtil.isTokenValide(accessToken) == false) {
+                result = Result.EXPIRE_ACCESS_TOKEN_FAIL;
+    
+                if(jwtUtil.isTokenValide(refreshToken) == false) result = Result.EXPIRE_REFRESH_TOKEN_FAIL;
+            }     
         }
-        return result;
+        
+        if(result == null) {
+            interceptorResult = userService.isTokenMatchUser(accessToken);
+        }
+        
+        if(result != null) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Response logicResponse = new Response(result.getStatus(), result.getMsg());
+            response.getWriter().write(mapper.writeValueAsString(logicResponse));
+        } 
+        return interceptorResult;
     }
 }
