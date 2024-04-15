@@ -1,6 +1,5 @@
 package com.rest.ybp.playlist;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +11,6 @@ public class PlaylistService {
     private PlaylistRepository playlistRepository;
     private S3Util bucketRepository;
 
-    @Autowired
     public PlaylistService(PlaylistRepository playlistRepository, S3Util bucketRepository) {
         this.playlistRepository = playlistRepository;
         this.bucketRepository = bucketRepository;

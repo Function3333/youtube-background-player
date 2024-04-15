@@ -78,13 +78,11 @@ public class UserController {
         return new Response(Result.LOGIN_FAIL.toString(), Result.LOGIN_FAIL.getMsg());
     }
 
-    //이후 login 로직 작성하기
-//    @GetMapping("/user/login")
-//    public Response login(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
-//        System.out.println("jwt = " + jwtToken);
-//        JwtManager jwtManager = new JwtManager();
-//        jwtManager.parseJwtToken(jwtToken);
-//
-//        return new Response(Result.SUCCESS.toString(), "void");
-//    }
+    @GetMapping("/user/accessToken")
+    public Response getAccessTokenByRefreshToken(@RequestHeader("REFRESH_TOKEN") String refreshToken) {
+        String accessToken = userService.getAccessTokenByRefreshToken(refreshToken);
+        Result reuslt = (accessToken == null) ? Result.PARSE_TOKEN_FAIL : Result.SUCCESS;
+
+        return new Response(reuslt.getStatus(), accessToken);
+    }
 }

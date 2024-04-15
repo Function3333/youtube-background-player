@@ -50,10 +50,10 @@ public class UserService {
         return tokenMap;
     }
 
-    public String generateAccessTokenByRefreshToken(String refreshToken) {
+    public String getAccessTokenByRefreshToken(String refreshToken) {
         String accessToken = null;
 
-        if(isTokenMatchUser(refreshToken)) {
+        if(isTokenMatchUser(refreshToken) && !jwtUtil.isTokenExpired(refreshToken)) {
             String userName = jwtUtil.parseToken(refreshToken);
             accessToken = jwtUtil.generateAccessToken(userName);
         }

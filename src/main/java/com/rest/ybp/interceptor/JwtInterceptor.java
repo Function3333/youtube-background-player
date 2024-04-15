@@ -46,10 +46,10 @@ public class JwtInterceptor implements HandlerInterceptor{
         if(isTokenNullOrEmpty(accessToken) || isTokenNullOrEmpty(refreshToken)) {
             result = Result.EMPTY_TOKEN_FAIL;
         } else {
-            if(jwtUtil.isTokenValide(accessToken) == false) {
+            if(jwtUtil.isTokenExpired(accessToken) == true) {
                 result = Result.EXPIRE_ACCESS_TOKEN_FAIL;
     
-                if(jwtUtil.isTokenValide(refreshToken) == false) result = Result.EXPIRE_REFRESH_TOKEN_FAIL;
+                if(jwtUtil.isTokenExpired(refreshToken) == true) result = Result.EXPIRE_REFRESH_TOKEN_FAIL;
             }     
         }
         

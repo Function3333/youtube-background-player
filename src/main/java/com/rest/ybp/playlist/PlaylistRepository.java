@@ -2,7 +2,6 @@ package com.rest.ybp.playlist;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +11,6 @@ public class PlaylistRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    @Autowired
     public PlaylistRepository(EntityManager em) {
         this.em = em;
         this.queryFactory = new JPAQueryFactory(em);

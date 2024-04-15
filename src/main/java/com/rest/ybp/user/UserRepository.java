@@ -2,7 +2,6 @@ package com.rest.ybp.user;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -10,7 +9,6 @@ public class UserRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    @Autowired
     public UserRepository(EntityManager em) {
         this.em = em;
         this.queryFactory = new JPAQueryFactory(em);

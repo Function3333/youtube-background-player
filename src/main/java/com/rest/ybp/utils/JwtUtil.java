@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtUtil {
     private static final SecretKey secretKey = Jwts.SIG.HS256.key().build();
     private static final String CLAIM_KEY = "userName";
-    private static final int ACCESS_TOKEN_VALIDATE_TIME = 1; //Minute
+    private static final int ACCESS_TOKEN_VALIDATE_TIME = 30; //Minute
     private static final int REFRESH_TOKEN_VALIDATE_TIME = 3; //Day
 
     public String generateAccessToken(String userName){
@@ -28,7 +28,7 @@ public class JwtUtil {
             accessToken = Jwts.builder()
             .signWith(secretKey)
             .subject("AccessToken")
-            .expiration(getAccessTokenValidateTime())
+            .expiration(getAccessTokenExpireDate())
             .claim(CLAIM_KEY, mapper.writeValueAsString(userName))
             .compact();    
         } catch (JsonProcessingException e) {
@@ -47,7 +47,7 @@ public class JwtUtil {
             refreshToken = Jwts.builder()
             .signWith(secretKey)
             .subject("RefreshToken")
-            .expiration(getRefreshTokenValidateTime())
+            .expiration(getRefreshTokenExpireDate())
             .claim(CLAIM_KEY, mapper.writeValueAsString(userName))
             .compact();  
         } catch (JsonProcessingException e) {
@@ -78,7 +78,7 @@ public class JwtUtil {
         return userName;
     }
 
-    public Date getAccessTokenValidateTime() {
+    public Date getAccessTokenExpireDate() {
         Date now = new Date();
 
         Calendar calendar = Calendar.getInstance();
@@ -88,7 +88,7 @@ public class JwtUtil {
         return calendar.getTime();
     }
 
-    public Date getRefreshTokenValidateTime() {
+    public Date getRefreshTokenExpireDate() {
         Date now = new Date();
 
         Calendar calendar = Calendar.getInstance();
@@ -98,21 +98,24 @@ public class JwtUtil {
         return calendar.getTime();
     }
 
-    public boolean isTokenValide(String token) {
-        boolean result = false;
-        
+    public boolean isTokenExpired(String token) {
+        boolean result = true;
+
         try {
             Claims claims = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            
+            Date date = claims.getExpiration();
+
+            System.out.println("Expired Date : " + date.toString());
             result = claims.getExpiration().before(new Date());
         } catch(SignatureException e) {
-            System.out.println("Check TokenValide Fail");
+            System.out.println("[JwtUtil] Token is not valide");
         } catch(ExpiredJwtException e) {
-            System.out.println("Token expired");
+            e.printStackTrace();
+            System.out.println("[JwtUtil] Token Expired");
         }
 
         return result;

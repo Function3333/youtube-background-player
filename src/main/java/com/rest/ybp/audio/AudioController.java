@@ -42,13 +42,11 @@ public class AudioController {
     @PostMapping("/audio")
     public Response postAudio(@RequestParam("videoId") String videoId
                                 ,@RequestParam("title") String title
-                                ,@RequestParam("thumbnailUrl") String thumbnailUrl
-                                ,@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
+                                ,@RequestParam("thumbnailUrl") String thumbnailUrl) {
         
         Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
         Result result = audioService.postAudio(youtube);
 
-        //인터셉터 적용해서 미리 token 검사한 후 로직 실행하게 변경
         // if(result == Result.SUCCESS) {
         //     String userName = jwtManager.parseAccessToken(accessToken);
         //     User user = userService.getUserByName(userName);
