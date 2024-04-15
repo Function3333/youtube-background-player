@@ -33,19 +33,21 @@ public class AudioService {
     }
 
     @Transactional
-    public Result postAudio(Youtube youtube) {
+    public Audio postAudio(Youtube youtube) {
+        Audio audio = null;
         int maximumVideoLength = 60 * 10;
         int videoLength = getVideoLength(youtube.getVideoId());
 
         if(videoLength <= maximumVideoLength) {
-            return uploadAudio(youtube);
+            audio = uploadAudio(youtube);
         }
-        return Result.MAXIMUM_VIDEO_LENGTH_FAIL;
+        return audio;
     }
 
-    public Result uploadAudio(Youtube youtube) {
-        Audio findByYoutubeId = audioRepository.getByYoutubeId(youtube.getVideoId());
+    public Audio uploadAudio(Youtube youtube) {
+        Audio audio = null;
 
+        Audio findByYoutubeId = audioRepository.getByYoutubeId(youtube.getVideoId());
         if(findByYoutubeId == null) {
             Result extractAudioResult = extractor.extractAudio(youtube.getVideoId());
 
@@ -54,19 +56,16 @@ public class AudioService {
                         new File(extractPath + "/" + youtube.getVideoId() + ".mp3"));
                 
                 if(uploadResult == Result.SUCCESS) {
-                    Audio audio = new Audio(youtube.getVideoId()
+                    audio = new Audio(youtube.getVideoId()
                                             ,youtube.getVideoTitle()
-                                            ,configProperties.getProperty("aws.bucketUrlPrefix") + youtube.getVideoId() + configProperties.getProperty("aws.bucketUrlPostfix"));
+                                            ,configProperties.getProperty("aws.bucketUrlPrefix") + youtube.getVideoId() + configProperties.getProperty("aws.bucketUrlPostfix")
+                                            ,youtube.getThumbnailUrl());
                                             
                     audioRepository.save(audio);
-                    return Result.SUCCESS;
                 }
             }
-        } else {
-            //audio entity and file already exits in s3, db
-            return Result.SUCCESS;
-        }
-        return Result.EXTRACT_AUDIO_FAIL;
+        } 
+        return audio;
     }    
 
     public int getVideoLength(String videoId) {

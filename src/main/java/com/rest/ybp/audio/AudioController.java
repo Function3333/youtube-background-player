@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Response;
 import com.rest.ybp.common.Result;
+import com.rest.ybp.playlist.Playlist;
 import com.rest.ybp.playlist.PlaylistService;
+import com.rest.ybp.user.User;
 import com.rest.ybp.user.UserService;
 import com.rest.ybp.utils.JwtUtil;
 import com.rest.ybp.youtube.Youtube;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,35 +39,35 @@ public class AudioController {
         }
     }
 
-    
     @PostMapping("/audio")
     public Response postAudio(@RequestParam("videoId") String videoId
                                 ,@RequestParam("title") String title
-                                ,@RequestParam("thumbnailUrl") String thumbnailUrl) {
-        
-        Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
-        Result result = audioService.postAudio(youtube);
+                                ,@RequestParam("thumbnailUrl") String thumbnailUrl
+                                ,@RequestHeader("ACCESS_TOKEN") String accessToken) {
 
-        // if(result == Result.SUCCESS) {
-        //     String userName = jwtManager.parseAccessToken(accessToken);
-        //     User user = userService.getUserByName(userName);
+        Result result = null;
 
-        //     if(user != null) {
-        //         List<String> youtubeIdList = audioService.getAudioByFullUrl(createFullUrl(url, listId));
+        try {
+            Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
+            Audio savedAudio = audioService.postAudio(youtube);
+            
+            String userName = jwtManager.parseToken(accessToken);
+            User user = userService.getUserByName(userName);
+            
+            if(savedAudio != null && user != null) {
+                Playlist playlist = new Playlist(user, savedAudio);
+                playlistService.savePlaylist(playlist);
 
-        //         for(String youtubeId : youtubeIdList) {
-        //             Audio audio = audioService.getByYoutubeId(youtubeId);
-
-        //             Playlist playlist = new Playlist(user, audio);
-        //             playlistService.savePlaylist(playlist);
-        //         }
-        //     }
-        // }
-
+                result = Result.SUCCESS;
+            } else {
+                result = Result.POST_AUDIO_FAIL;
+            }
+        //catch문 Excpetion 업데이트하기
+        } catch (Exception e) {
+            System.out.println("[AudioController] postAudio Error");
+            result = Result.POST_AUDIO_FAIL;
+            e.printStackTrace();
+        }
         return new Response(result.getStatus(), result.getMsg());
-    }
-
-    public String createFullUrl(String youtubeId, String listId) {
-        return listId == null ? youtubeId : youtubeId + "&list=" + listId;
     }
 }

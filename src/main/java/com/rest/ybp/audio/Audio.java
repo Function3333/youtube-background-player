@@ -21,16 +21,20 @@ public class Audio {
     @Column(name = "AUDIO_URL")
     private String audioUrl;
 
+    @Column(name = "AUDIO_THUMBNAIL_URL")
+    private String thumbnailUrl;
+
     @OneToMany(mappedBy = "audio")
     private List<Playlist> playList;
 
     public Audio() {
     }
 
-    public Audio(String youtubeId, String youtubeTitle, String audioUrl) {
+    public Audio(String youtubeId, String youtubeTitle, String audioUrl, String thumbnailUrl) {
         this.youtubeId = youtubeId;
         this.youtubeTitle = youtubeTitle;
         this.audioUrl = audioUrl;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public int getId() {
@@ -52,4 +56,12 @@ public class Audio {
     public List<Playlist> getPlayList() {
         return playList;
     }
+
+     public String getThumbnailUrl() {
+         return thumbnailUrl;
+     }
+
+     public void setThumbnailUrl(String thumbnailUrl) {
+         this.thumbnailUrl = thumbnailUrl;
+     }
 }
