@@ -50,7 +50,7 @@ public class S3Util {
 
     public Result deleteAudio(String audioId) {
         try {
-            DeleteObjectRequest request = new DeleteObjectRequest(awsConfig.getProperty("bucketName"), audioId);
+            DeleteObjectRequest request = new DeleteObjectRequest(awsConfig.getProperty("aws.bucketName"), audioId + ".mp3");
             client.deleteObject(request);
             System.out.printf("[%s] delete complete%n", request.getKey());
         } catch (Exception e) {

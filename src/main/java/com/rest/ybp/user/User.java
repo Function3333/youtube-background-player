@@ -1,9 +1,6 @@
 package com.rest.ybp.user;
 
-import com.rest.ybp.playlist.Playlist;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 public class User {
@@ -22,8 +19,8 @@ public class User {
     @Column(name = "USER_EMAIL", unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "user")
-    private List<Playlist> playLists;
+    // @OneToMany(mappedBy = "user")
+    // private List<Playlist> playLists;
 
     public User(String name, String password, String email) {
         this.name = name;
@@ -50,7 +47,7 @@ public class User {
         return email;
     }
 
-    public List<Playlist> getPlayLists() {
-        return playLists;
-    }
+    // public List<Playlist> getPlayLists() {
+    //     return playLists;
+    // }
 }

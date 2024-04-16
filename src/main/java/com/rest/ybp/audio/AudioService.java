@@ -45,10 +45,9 @@ public class AudioService {
     }
 
     public Audio uploadAudio(Youtube youtube) {
-        Audio audio = null;
-
-        Audio findByYoutubeId = audioRepository.getByYoutubeId(youtube.getVideoId());
-        if(findByYoutubeId == null) {
+        
+        Audio audio = audioRepository.getByYoutubeId(youtube.getVideoId());
+        if(audio == null) {
             Result extractAudioResult = extractor.extractAudio(youtube.getVideoId());
 
             if(extractAudioResult == Result.SUCCESS) {
@@ -64,7 +63,7 @@ public class AudioService {
                     audioRepository.save(audio);
                 }
             }
-        } 
+        }
         return audio;
     }    
 

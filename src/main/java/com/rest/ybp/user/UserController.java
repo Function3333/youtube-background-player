@@ -63,7 +63,7 @@ public class UserController {
     public Response signup(@ModelAttribute UserDto userDto) {
         Result result = userService.signup(userDto.getName(), userDto.getPassword(), userDto.getEmail());
 
-        return new Response(result.name(), result.getMsg());
+        return new Response(result.getStatus(), result.getMsg());
     }
 
     @PostMapping("/user/login")

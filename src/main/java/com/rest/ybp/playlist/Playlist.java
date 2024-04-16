@@ -20,6 +20,8 @@ public class Playlist {
     @JoinColumn(name = "AUDIO_ID")
     private Audio audio;
 
+    public Playlist() {}
+
     public Playlist(User user, Audio audio) {
         this.user = user;
         this.audio = audio;

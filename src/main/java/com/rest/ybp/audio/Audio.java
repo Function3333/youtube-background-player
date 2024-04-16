@@ -1,9 +1,7 @@
 package com.rest.ybp.audio;
 
-import com.rest.ybp.playlist.Playlist;
 import jakarta.persistence.*;
 
-import java.util.List;
 
 @Entity
 public class Audio {
@@ -24,8 +22,8 @@ public class Audio {
     @Column(name = "AUDIO_THUMBNAIL_URL")
     private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "audio")
-    private List<Playlist> playList;
+    // @OneToMany(mappedBy = "audio")
+    // private List<Playlist> playList;
 
     public Audio() {
     }
@@ -51,10 +49,6 @@ public class Audio {
 
     public String getAudioUrl() {
         return audioUrl;
-    }
-
-    public List<Playlist> getPlayList() {
-        return playList;
     }
 
      public String getThumbnailUrl() {

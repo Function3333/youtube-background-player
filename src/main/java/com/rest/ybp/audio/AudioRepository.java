@@ -33,10 +33,12 @@ public class AudioRepository {
                 .fetchOne();
     }
 
-
-
     public int save(Audio audio) {
         em.persist(audio);
         return audio.getId();
+    }
+
+    public void deleteAudio(Audio audio) {
+        em.remove(audio);
     }
 }

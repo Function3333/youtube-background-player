@@ -105,9 +105,7 @@ public class JwtUtil {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            Date date = claims.getExpiration();
 
-            System.out.println("Expired Date : " + date.toString());
             result = claims.getExpiration().before(new Date());
         } catch(SignatureException e) {
             System.out.println("[JwtUtil] Token is not valide");

@@ -27,7 +27,7 @@ public enum Result {
 
     //PlayList Error
     GET_PLAYLIST_FAIL("FAIL", "재생목록을 가져오는데 실패하였습니다."),
-    DELETE_PLAYLIST_FAIL(:"FAIL", "재생목록 삭제에 실패하였습니다"),
+    DELETE_PLAYLIST_FAIL("FAIL", "재생목록 삭제에 실패하였습니다"),
 
     //Successs
     SUCCESS("SUCCESS","성공하였습니다.");

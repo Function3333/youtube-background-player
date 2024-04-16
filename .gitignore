@@ -44,3 +44,7 @@ out/
 
 ### class ###
 JwtUtil.java
+
+
+### mp3 ###
+*.mp3

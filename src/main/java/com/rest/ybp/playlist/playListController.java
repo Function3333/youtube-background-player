@@ -38,7 +38,8 @@ public class playListController {
                 List<Playlist> userPlayList = playlistService.getUserPlayList(userName);
                 result = Result.SUCCESS;
 
-                jsonPlayList = new ObjectMapper().writeValueAsString(userPlayList);
+                ObjectMapper mapper = new ObjectMapper();
+                jsonPlayList = mapper.writeValueAsString(userPlayList);
             }    
 
             if(userName == null) {
@@ -53,16 +54,17 @@ public class playListController {
     }
 
     @DeleteMapping("/playList")
-    public Response deletePlayList(@RequestHeader("ACCES_TOKEN")String accessToken, @RequestParam("audio_id") String audioId) {
+    public Response deletePlayList(@RequestHeader("ACCESS_TOKEN")String accessToken, @RequestParam("audioId") String audioId) {
         Result result = Result.DELETE_PLAYLIST_FAIL;
         String userName = jwtUtil.parseToken(accessToken);
         
         if(userName != null && audioId != null) {
             try {
-                playlistService.deleteUserPlayList(userName, Integer.parseInt(userName));    
+                playlistService.deleteUserPlayList(userName, Integer.parseInt(audioId));    
                 result = Result.SUCCESS;
             } catch (NumberFormatException e) {
                 result = Result.DELETE_PLAYLIST_FAIL;
+                e.printStackTrace();
             }
             
         }

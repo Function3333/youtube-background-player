@@ -23,14 +23,20 @@ public class UserService {
 
     @Transactional
     public Result signup(String name, String password, String email) {
-        if(validateName(name) == Result.DUPLICATE_NAME) return Result.DUPLICATE_NAME;
-        if(validateEmail(email) == Result.DUPLICATE_EMAIL) return Result.DUPLICATE_EMAIL;
+        Result result = Result.SIGNUP_FAIL;
+        
+        if(validateName(name) == Result.DUPLICATE_NAME) result = Result.DUPLICATE_NAME;
+        if(validateEmail(email) == Result.DUPLICATE_EMAIL) result = Result.DUPLICATE_EMAIL;
 
-        User user = new User(name, password, email);
-        int result = userRepository.save(user);
-
-        if(result == 0) return Result.SIGNUP_FAIL;
-        else return Result.SUCCESS;
+        try {
+            User user = new User(name, password, email);
+            userRepository.save(user);    
+            result = Result.SUCCESS;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        
+        return result;
     }
 
     @Transactional
