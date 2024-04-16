@@ -35,8 +35,18 @@
 - 오디오 추출까지 남은시간 or 퍼센트 출력
 - AccessToken, RefreshToken을 구분하는 로직을 넣는게 좋을까?, 
   EX). RefreshToken만으로 AccessToken 발급하는 로직같은데 넣기
+- playList 정렬하게 playList Entity에 저장 날짜 넣어보자
+- youtube-dl 라이브러리로 다운받은 mp3 파일 s3에 업로드 후 삭제하게 구현
 
 ## 오늘 코딩 시작 지점
-- JwtUtil의 isTokenValide 메서드에서 refresh token 파싱 못하는 에러 해결
-- 위 에러 해결 후 refresh token이 valide하면 refresh token만으로 다시 access token을 발급하는 UserController method 만들기
+- playList 마무리
+
+
+#### PlayList 테스트 시나리오
+- Audio 저장 시 PlayList 자동등록
+- 중복 Audio Save 시도 시 PlayList에 새롭게 저장하지 않음
+- UserName으로 Audio 가져오기
+- 두명 이상의 사용자가 같은 Audio를 PlayList에 저장, 이후 한명의 사용자가 해당 PlayList를 삭제할때 PlayList에서만 삭제되고 s3 Bucket에서는 삭제 X
+- Audio가 한명의 사용자에게만 등록되어있고 이후 해당 Audio 삭제 요청이 들어오면 s3 Bucket에서 삭제
+
 

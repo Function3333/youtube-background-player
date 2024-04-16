@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/*
+ * fetch()는 조건에 해당하는 데이터가 없으면 null이 아닌 빈 배열 반환
+ */
 @Repository
 public class PlaylistRepository {
     private final EntityManager em;
@@ -17,7 +20,14 @@ public class PlaylistRepository {
     }
 
     public int savePlaylist(Playlist playlist) {
-        em.persist(playlist);
+        String userName = playlist.getUser().getName();
+        int audioId = playlist.getAudio().getId();
+
+        Playlist userPlaylist = getPlayListByUserIdAndAudioId(userName, audioId);
+
+        if(userPlaylist == null) {
+            em.persist(playlist);
+        }
         return playlist.getId();
     }
 
@@ -25,12 +35,12 @@ public class PlaylistRepository {
         em.remove(playlist);
     }
 
-    public List<Playlist> getByUserId(int userId) {
+    public List<Playlist> getByUserName(String userName) {
         QPlaylist qPlaylist = QPlaylist.playlist;
 
         return queryFactory
                 .selectFrom(qPlaylist)
-                .where(qPlaylist.user.id.eq(userId))
+                .where(qPlaylist.user.name.eq(userName))
                 .fetch();
     }
 
@@ -45,4 +55,13 @@ public class PlaylistRepository {
         return playlists.size();
     }
 
+    public Playlist getPlayListByUserIdAndAudioId(String userName, int audioId) {
+        QPlaylist qPlaylist = QPlaylist.playlist;
+
+        return queryFactory
+                .selectFrom(qPlaylist)
+                .where(qPlaylist.user.name.eq(userName)
+                .and(qPlaylist.audio.id.eq(audioId)))
+                .fetchFirst();    
+    }
 }

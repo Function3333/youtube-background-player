@@ -69,9 +69,7 @@ public class JwtUtil {
                     .parseSignedClaims(token)
                     .getPayload()
                     .get(CLAIM_KEY);
-            System.out.println("parseToken before userName : " + userName);
             userName = userName.replaceAll("\"", "");
-            System.out.println("parseToken after userName : " + userName);
         } catch (SignatureException e) {
             System.out.println("Parse Token Fail");
         }

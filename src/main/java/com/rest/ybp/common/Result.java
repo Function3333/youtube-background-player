@@ -25,6 +25,11 @@ public enum Result {
     EXPIRE_ACCESS_TOKEN_FAIL("ACCESS_TOKEN_EXPIRED", "토큰 재발급이 필요합니다."),
     EXPIRE_REFRESH_TOKEN_FAIL("REFRESH_TOKEN_EXPIRED", "로그인 기간이 만료되었습니다."),
 
+    //PlayList Error
+    GET_PLAYLIST_FAIL("FAIL", "재생목록을 가져오는데 실패하였습니다."),
+    DELETE_PLAYLIST_FAIL(:"FAIL", "재생목록 삭제에 실패하였습니다"),
+
+    //Successs
     SUCCESS("SUCCESS","성공하였습니다.");
 
     private final String status;
