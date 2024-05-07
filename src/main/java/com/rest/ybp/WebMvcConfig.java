@@ -16,8 +16,11 @@ public class WebMvcConfig implements WebMvcConfigurer{
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        String[] excludePattern = {
+            "/user", "/user/login", "/user/accessToken", "/login/validateUsername", "/login/verifyEmail"};
+
         registry.addInterceptor(jwtInterceptor)
-                .excludePathPatterns("/user", "/user/login", "/user/accessToken", "/login/validateUsername");
+                .excludePathPatterns(excludePattern);
     }
     
 }

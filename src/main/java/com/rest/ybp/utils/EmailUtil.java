@@ -27,8 +27,8 @@ public class EmailUtil {
         try {
             message.setFrom(new InternetAddress(emailProperties.getProperty("email.id")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(receiverEmail));
-            message.setSubject("test Email");
-            message.setText("인증번호 : " + certificationNumber);
+            message.setSubject("Youtube Player Email Authentication");
+            message.setText("Authentication Number : " + certificationNumber);
 
             Transport.send(message);
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class EmailUtil {
 
     public void initProperties() throws IOException {
         emailProperties = new Properties();
-        emailProperties.load(this.getClass().getResourceAsStream("/email.properties"));
+        emailProperties.load(this.getClass().getResourceAsStream("/config.properties"));
     }
 
     public void initSmtpProperties() {
@@ -50,12 +50,12 @@ public class EmailUtil {
         smtpProperties.put("mail.smtp.port","465");
         smtpProperties.put("mail.smtp.ssl.enable", "true");
         smtpProperties.put("mail.smtp.ssl.trust", "smtp.naver.com");
-        smtpProperties.put("mail.smtp.auth", "true");
+        smtpProperties.put("mail.smtp.auth", "true"); 
     }
 
     public Session createSession(Properties smtpProperties) {
 
-        return Session.getDefaultInstance(smtpProperties, new Authenticator() {
+        return Session.getInstance(smtpProperties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(emailProperties.getProperty("email.id"), emailProperties.getProperty("email.password"));

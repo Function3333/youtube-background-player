@@ -19,14 +19,14 @@ public class UserController {
     private final UserService userService;
     private static final String VERIFY_EMAIL_SESSION_KEY= "certificationNumber";
     private static final String EMAIL_SESSION_KEY= "EMAIL";
-    private static final int SESSION_DURATION= 30;
+    private static final int SESSION_DURATION= 5;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/login/verifyEmail")
-    public Response sendVerifyEmail(@RequestParam("inputEmail") String inputEmail , HttpSession session) throws IOException {
+    public Response sendVerifyEmail(@RequestParam("email") String inputEmail , HttpSession session) throws IOException {
         String certificationNumber = EmailUtil.createCertificationNumber();
 
         EmailUtil email = new EmailUtil();
@@ -56,7 +56,6 @@ public class UserController {
 
     @GetMapping("/login/validateUsername")
     public Response validateName(@RequestParam("username") String name) {
-        System.out.println("validate UserName : " + name);
         Result result = userService.validateName(name);
         return new Response(result.name(), result.getMsg());
     }
