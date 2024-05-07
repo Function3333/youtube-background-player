@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -54,9 +53,8 @@ public class UserController {
         return new Response(Result.VERIFY_EMAIL_FAIL.toString(),Result.VERIFY_EMAIL_FAIL.getMsg());
     }
 
-    @GetMapping("/login/validateUsername")
-    public Response validateName(@RequestParam("username") String name) {
-        System.out.println("validate UserName : " + name);
+    @GetMapping("/login/validateName")
+    public Response validateName(@RequestParam("name") String name) {
         Result result = userService.validateName(name);
         return new Response(result.name(), result.getMsg());
     }
@@ -69,13 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public Response login(@RequestBody HashMap<String, String> jsonMap) throws JsonProcessingException {
-        String name =  jsonMap.get("name");
-        String password =  jsonMap.get("password");
-
-        System.out.println("name : " + name);
-        System.out.println("password : " + password);
-        
+    public Response login(@RequestParam("name") String name, @RequestParam("password") String password) throws JsonProcessingException {
         Map<String, String> tokenMap = userService.login(name, password);
 
         if(tokenMap != null) {
