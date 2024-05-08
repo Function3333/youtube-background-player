@@ -25,17 +25,16 @@ public class UserService {
     public Result signup(String name, String password, String email) {
         Result result = Result.SIGNUP_FAIL;
         
-        if(validateName(name) == Result.DUPLICATE_NAME) result = Result.DUPLICATE_NAME;
-        if(validateEmail(email) == Result.DUPLICATE_EMAIL) result = Result.DUPLICATE_EMAIL;
-
         try {
-            User user = new User(name, password, email);
-            userRepository.save(user);    
-            result = Result.SUCCESS;
+            if(validateName(name) == Result.SUCCESS && validateEmail(email) == Result.SUCCESS) {
+                User user = new User(name, password, email);
+                userRepository.save(user);    
+                result = Result.SUCCESS;
+            }
         } catch (IllegalArgumentException e) {
+            System.out.println("[UserService Error] signup()");
             e.printStackTrace();
         }
-        
         return result;
     }
 

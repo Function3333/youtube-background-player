@@ -16,10 +16,8 @@ import java.util.Map;
 
 @RestController
 public class UserController {
+    private static final int SESSION_DURATION= 60 * 5;
     private final UserService userService;
-    private static final String VERIFY_EMAIL_SESSION_KEY= "certificationNumber";
-    private static final String EMAIL_SESSION_KEY= "EMAIL";
-    private static final int SESSION_DURATION= 5;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -33,8 +31,7 @@ public class UserController {
         Result result = email.sendEmail(inputEmail, certificationNumber);
 
         if(result == Result.SUCCESS) {
-            session.setAttribute(VERIFY_EMAIL_SESSION_KEY, certificationNumber);
-            session.setAttribute(EMAIL_SESSION_KEY, inputEmail);
+            session.setAttribute(inputEmail, certificationNumber);
             session.setMaxInactiveInterval(SESSION_DURATION);
 
             return new Response(result.toString(), result.getMsg());
@@ -44,13 +41,16 @@ public class UserController {
     }
 
     @PostMapping("/login/verifyEmail")
-    public Response validateVerifyEmail(@RequestParam("inputNumber") String inputNumber, HttpSession session) {
-        String certificationNumber = (String)session.getAttribute(VERIFY_EMAIL_SESSION_KEY);
+    public Response validateVerifyEmail(@RequestBody HashMap<String,String> jsonMap, HttpSession session) {
+        String verifyNumber = jsonMap.get("verifyNumber");
+        String inputEmail = jsonMap.get("inputEmail");
+        String certificationNumber = (String) session.getAttribute(inputEmail);
 
-        Result result = userService.validateEmail((String) session.getAttribute(EMAIL_SESSION_KEY));
-        if(result == Result.DUPLICATE_EMAIL) return new Response(Result.DUPLICATE_EMAIL.name(), Result.DUPLICATE_EMAIL.getMsg());
-
-        if(inputNumber.equals(certificationNumber)) return new Response(Result.SUCCESS.name(), Result.SUCCESS.getMsg());
+        if(inputEmail != null) {
+            Result result = userService.validateEmail(inputEmail);
+            if(verifyNumber.equals(certificationNumber) && result == Result.DUPLICATE_EMAIL) return new Response(Result.DUPLICATE_EMAIL.name(), Result.DUPLICATE_EMAIL.getMsg());
+            if(verifyNumber.equals(certificationNumber)) return new Response(Result.SUCCESS.name(), Result.SUCCESS.getMsg());
+        }        
         return new Response(Result.VERIFY_EMAIL_FAIL.toString(),Result.VERIFY_EMAIL_FAIL.getMsg());
     }
 
@@ -61,8 +61,12 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public Response signup(@ModelAttribute UserDto userDto) {
-        Result result = userService.signup(userDto.getName(), userDto.getPassword(), userDto.getEmail());
+    public Response signup(@RequestBody HashMap<String, String> jsonMap) {
+        String username = jsonMap.get("username");
+        String email = jsonMap.get("email");
+        String password = jsonMap.get("password");
+
+        Result result = userService.signup(username, password, email);
 
         return new Response(result.getStatus(), result.getMsg());
     }

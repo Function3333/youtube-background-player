@@ -55,7 +55,7 @@ public class UserRepository {
 
         return queryFactory
                 .selectFrom(qUser)
-                .where(qUser.name.eq(email))
+                .where(qUser.email.eq(email))
                 .fetchFirst();
     }
 }
