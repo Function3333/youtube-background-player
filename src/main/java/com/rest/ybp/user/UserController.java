@@ -75,9 +75,6 @@ public class UserController {
     public Response login(@RequestBody HashMap<String, String> jsonMap) throws JsonProcessingException {
         String name =  jsonMap.get("name");
         String password =  jsonMap.get("password");
-
-        System.out.println("name : " + name);
-        System.out.println("password : " + password);
         
         Map<String, String> tokenMap = userService.login(name, password);
 
