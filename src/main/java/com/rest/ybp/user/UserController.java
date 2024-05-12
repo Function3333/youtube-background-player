@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Response;
 import com.rest.ybp.common.Result;
+import com.rest.ybp.common.Token;
 import com.rest.ybp.utils.EmailUtil;
 
 import jakarta.servlet.http.HttpSession;
@@ -76,7 +77,7 @@ public class UserController {
         String name =  jsonMap.get("name");
         String password =  jsonMap.get("password");
         
-        Map<String, String> tokenMap = userService.login(name, password);
+        Map<String, Token> tokenMap = userService.login(name, password);
 
         if(tokenMap != null) {
             ObjectMapper mapper = new ObjectMapper();
@@ -87,10 +88,10 @@ public class UserController {
     }
 
     @GetMapping("/user/accessToken")
-    public Response getAccessTokenByRefreshToken(@RequestHeader("REFRESH_TOKEN") String refreshToken) {
-        String accessToken = userService.getAccessTokenByRefreshToken(refreshToken);
+    public Response getAccessTokenByRefreshToken(@RequestParam("REFRESH_TOKEN") String refreshToken) {
+        Token accessToken = userService.getAccessTokenByRefreshToken(refreshToken);
+        
         Result reuslt = (accessToken == null) ? Result.PARSE_TOKEN_FAIL : Result.SUCCESS;
-
         return new Response(reuslt.getStatus(), accessToken);
     }
 }

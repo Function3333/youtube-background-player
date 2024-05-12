@@ -32,6 +32,7 @@ public class JwtInterceptor implements HandlerInterceptor{
     }
 
     @Override
+    @SuppressWarnings("null")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {    
         Result result = null;
         boolean interceptorResult = false;

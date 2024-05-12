@@ -3,10 +3,10 @@ package com.rest.ybp.common;
 public class Response {
 
     private String result;
-    private String data;
+    private Object data;
 
 
-    public Response(String result, String data) {
+    public Response(String result, Object data) {
         this.result = result;
         this.data = data;
     }
@@ -15,7 +15,7 @@ public class Response {
         return result;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 }

@@ -2,11 +2,13 @@ package com.rest.ybp.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rest.ybp.common.Result;
+import com.rest.ybp.common.Token;
 import com.rest.ybp.utils.JwtUtil;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,31 +41,38 @@ public class UserService {
     }
 
     @Transactional
-    public Map<String, String> login(String name, String password) throws JsonProcessingException {
-        User user = userRepository.getUserByName(name);
-        Map<String, String> tokenMap = null;
+    public Map<String, Token> login(String name, String password) throws JsonProcessingException {
+        Map<String, Token> tokenMap = null;
 
+        User user = userRepository.getUserByName(name);
         if(user != null) {
             String userPassword = user.getPassword();
 
             if(userPassword.equals(password)) {
                 tokenMap = new HashMap<>();
-                tokenMap.put("accessToken", jwtUtil.generateAccessToken(user.getName()));
-                tokenMap.put("refreshToken", jwtUtil.generateRefreshToken(user.getName()));
+                
+                String accessTokenPayload = jwtUtil.generateAccessToken(user.getName());
+                String refreshTokenPayload = jwtUtil.generateRefreshToken(user.getName());
+
+                tokenMap.put("accessToken", new Token(accessTokenPayload, jwtUtil.getTokenExpiration(accessTokenPayload)));
+                tokenMap.put("refreshToken", new Token(refreshTokenPayload, jwtUtil.getTokenExpiration(refreshTokenPayload)));
             }
         }
         return tokenMap;
     }
 
-    public String getAccessTokenByRefreshToken(String refreshToken) {
-        String accessToken = null;
+    public Token getAccessTokenByRefreshToken(String refreshToken) {
+        Token token = null;
 
         if(isTokenMatchUser(refreshToken) && !jwtUtil.isTokenExpired(refreshToken)) {
             String userName = jwtUtil.parseToken(refreshToken);
-            accessToken = jwtUtil.generateAccessToken(userName);
-        }
+            
+            String accessTokenPayload = jwtUtil.generateAccessToken(userName);
+            Date accessTokenExpiredDate = jwtUtil.getTokenExpiration(accessTokenPayload);
 
-        return accessToken;
+            token = new Token(accessTokenPayload, accessTokenExpiredDate);
+        }
+        return token;
     }
 
     public boolean isTokenMatchUser(String accessToken) {

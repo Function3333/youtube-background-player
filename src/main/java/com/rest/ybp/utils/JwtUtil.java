@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtUtil {
     private static final SecretKey secretKey = Jwts.SIG.HS256.key().build();
     private static final String CLAIM_KEY = "userName";
-    private static final int ACCESS_TOKEN_VALIDATE_TIME = 10; //Minute
+    private static final int ACCESS_TOKEN_VALIDATE_TIME = 1; //Minute
     private static final int REFRESH_TOKEN_VALIDATE_TIME = 3; //Day
 
     public String generateAccessToken(String userName){
@@ -94,6 +94,22 @@ public class JwtUtil {
 
         calendar.add(Calendar.DAY_OF_WEEK, REFRESH_TOKEN_VALIDATE_TIME);
         return calendar.getTime();
+    }
+
+    public Date getTokenExpiration(String token) {
+        Date expiredDate = null;
+
+        try {
+            Claims claims = Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();    
+            expiredDate = claims.getExpiration();
+        } catch (SignatureException | ExpiredJwtException e) {
+            e.printStackTrace();
+        }
+        return expiredDate;
     }
 
     public boolean isTokenExpired(String token) {
