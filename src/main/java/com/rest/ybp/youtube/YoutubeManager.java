@@ -24,25 +24,25 @@ public class YoutubeManager {
         configProperties.load(this.getClass().getResourceAsStream("/config.properties"));
     }
 
-    /*
-     * keyword validation은 front에서 하기
-     * pagination 구현하기
-     */
-    public String search(String keyword) {
+    public String search(String keyword, String nextPageToken) {
         String result = null;
 
         try {
-            URI uri = new URIBuilder()
+            URIBuilder uriBuilder = new URIBuilder()
                 .setScheme("https")
                 .setHost("www.googleapis.com/youtube/v3/search")
                 .setParameter("key", configProperties.getProperty("youtube.accessToken"))
                 .setParameter("q", keyword)
                 .setParameter("part", "snippet")
                 .setParameter("type", "video")
-                .setParameter("maxResult", "10")
-                .setParameter("fields", "items(id(videoId), snippet(title,thumbnails.high))")
-                .build();
-            
+                .setParameter("maxResult", "5")
+                .setParameter("fields", "nextPageToken, items(id(videoId), snippet(title,channelTitle, thumbnails.high))");
+                
+            if(nextPageToken != null) {
+                uriBuilder.setParameter("pageToken", nextPageToken);
+            }
+
+            URI uri = uriBuilder.build();
             HttpGet httpRequest = new HttpGet(uri);
 
             CloseableHttpClient httpClient = HttpClients.createDefault();

@@ -15,11 +15,14 @@ public class YoutubeController {
         this.youtubeManager = youtubeManager;
     }
 
-    @GetMapping("/youtube/searchList")
-    public Response getSearchResults(@RequestParam("keyword") String keyword) {
-        Response response;
+    @GetMapping("/youtubeSearchList")
+    public Response getSearchResults(@RequestParam("keyword") String keyword, @RequestParam(value = "nextPageToken", required = false) String nextPageToken) {
+        System.out.println("[YoutubeController] Search Keyword : " + keyword);
+        System.out.println("[YoutubeController] Next Page Token : " + nextPageToken);
+
+        Response response = null;
         
-        String result = youtubeManager.search(keyword);
+        String result = youtubeManager.search(keyword, nextPageToken);
         response = (result != null) ? new Response(Result.SUCCESS.getStatus(), result) 
                                     : new Response(Result.SEARCH_FAIL.getStatus(), Result.SEARCH_FAIL.getMsg());
 

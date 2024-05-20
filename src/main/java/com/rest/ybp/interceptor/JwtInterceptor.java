@@ -41,9 +41,6 @@ public class JwtInterceptor implements HandlerInterceptor{
         String accessToken = request.getHeader(ACCESS_TOKEN_HEADER_KEY);
         String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_KEY);
 
-        System.out.println("accessToken : " + accessToken);
-        System.out.println("refreshToken : " + refreshToken);
-
         if(isTokenNullOrEmpty(accessToken) || isTokenNullOrEmpty(refreshToken)) {
             result = Result.EMPTY_TOKEN_FAIL;
         } else {
@@ -65,6 +62,7 @@ public class JwtInterceptor implements HandlerInterceptor{
             Response logicResponse = new Response(result.getStatus(), result.getMsg());
             response.getWriter().write(mapper.writeValueAsString(logicResponse));
         } 
+
         return interceptorResult;
     }
 }

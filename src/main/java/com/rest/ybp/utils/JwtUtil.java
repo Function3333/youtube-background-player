@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtUtil {
     private static final SecretKey secretKey = Jwts.SIG.HS256.key().build();
     private static final String CLAIM_KEY = "userName";
-    private static final int ACCESS_TOKEN_VALIDATE_TIME = 1; //Minute
+    private static final int ACCESS_TOKEN_VALIDATE_TIME = 30; //Minute
     private static final int REFRESH_TOKEN_VALIDATE_TIME = 3; //Day
 
     public String generateAccessToken(String userName){
