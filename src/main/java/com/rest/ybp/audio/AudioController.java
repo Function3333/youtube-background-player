@@ -11,6 +11,8 @@ import com.rest.ybp.user.UserService;
 import com.rest.ybp.utils.JwtUtil;
 import com.rest.ybp.youtube.Youtube;
 
+import java.util.HashMap;
+
 import org.springframework.web.bind.annotation.*;
 
 
@@ -40,27 +42,31 @@ public class AudioController {
     }
 
     @PostMapping("/audio")
-    public Response postAudio(@RequestParam("videoId") String videoId
-                                ,@RequestParam("title") String title
-                                ,@RequestParam("thumbnailUrl") String thumbnailUrl
-                                ,@RequestHeader("ACCESS_TOKEN") String accessToken) {
-
+    public Response postAudio(@RequestBody HashMap<String, String> jsonMap, @RequestHeader("ACCESS_TOKEN") String accessToken) {
         Result result = null;
-
+        
         try {
-            Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
-            Audio savedAudio = audioService.postAudio(youtube);
-            
-            String userName = jwtManager.parseToken(accessToken);
-            User user = userService.getUserByName(userName);
-            
-            if(savedAudio != null && user != null) {
-                Playlist playlist = new Playlist(user, savedAudio);
-                playlistService.savePlaylist(playlist);
+            String videoId = jsonMap.get("videoId");
+            String title = jsonMap.get("title");
+            String thumbnailUrl = jsonMap.get("thumbnailUrl");
 
-                result = Result.SUCCESS;
-            } else {
-                result = Result.POST_AUDIO_FAIL;
+            System.out.println("[AudioController] postAudio : videoId : " 
+            + videoId + ", title : " + title + ", thumbnailUrl : " + thumbnailUrl + ", accessToken : " +accessToken);
+
+            String userName = jwtManager.parseToken(accessToken);
+            if(userName != null) {
+                User user = userService.getUserByName(userName);
+                Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
+                Audio savedAudio = audioService.postAudio(youtube);
+
+                if(savedAudio != null && user != null) {
+                    Playlist playlist = new Playlist(user, savedAudio);
+                    playlistService.savePlaylist(playlist);
+    
+                    result = Result.SUCCESS;
+                } else {
+                    result = Result.POST_AUDIO_FAIL;
+                }
             }
         //catch문 Excpetion 업데이트하기
         } catch (Exception e) {
@@ -68,6 +74,7 @@ public class AudioController {
             result = Result.POST_AUDIO_FAIL;
             e.printStackTrace();
         }
+        result = (result == null) ? Result.POST_AUDIO_FAIL : result;
         return new Response(result.getStatus(), result.getMsg());
     }
 }

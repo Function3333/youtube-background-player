@@ -35,8 +35,11 @@ public class YoutubeManager {
                 .setParameter("q", keyword)
                 .setParameter("part", "snippet")
                 .setParameter("type", "video")
-                .setParameter("maxResult", "5")
-                .setParameter("fields", "nextPageToken, items(id(videoId), snippet(title,channelTitle, thumbnails.high))");
+                .setParameter("order", "viewCount") // 조회수 높은 순으로 정렬
+                .setParameter("regionCode", "KR") // 지역 설정 추가
+                .setParameter("fields", "nextPageToken, items(id(videoId), snippet(title,channelTitle, thumbnails.high))")
+                .setParameter("maxResult", "5");
+                // .setParameter("eventType", "completed") //exclude live streaming
                 
             if(nextPageToken != null) {
                 uriBuilder.setParameter("pageToken", nextPageToken);
