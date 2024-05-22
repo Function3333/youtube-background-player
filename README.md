@@ -39,7 +39,6 @@
 ### ToDo List
 - 오디오 추출까지 남은시간 or 퍼센트 출력
 - playList 정렬하게 playList Entity에 저장 날짜 넣어보자
-- youtube-dl 라이브러리로 다운받은 mp3 파일 s3에 업로드 후 삭제하게 구현
 - table의 pk들이 50씩 증가하는거 고치기
 - Youtube API를 통해 가져온 검색 결과의 정확도가 너무 낮음
 

@@ -20,8 +20,9 @@ public class AudioService {
     private static Properties configProperties;
 
     private final AudioRepository audioRepository;
-    private final S3Util S3Utils;
     private final YoutubeDlUtil extractor;
+    private final S3Util S3Utils;
+    
 
     public AudioService(AudioRepository audioRepository, S3Util S3Utils, YoutubeDlUtil extractor) throws IOException {
         this.audioRepository = audioRepository;
@@ -51,8 +52,8 @@ public class AudioService {
             Result extractAudioResult = extractor.extractAudio(youtube.getVideoId());
 
             if(extractAudioResult == Result.SUCCESS) {
-                Result uploadResult = S3Utils.uploadAudio(youtube.getVideoId() + ".mp3", 
-                        new File(extractPath + "/" + youtube.getVideoId() + ".mp3"));
+                File uploadFile = new File(extractPath + "/" + youtube.getVideoId() + ".mp3");
+                Result uploadResult = S3Utils.uploadAudio(youtube.getVideoId() + ".mp3", uploadFile);
                 
                 if(uploadResult == Result.SUCCESS) {
                     audio = new Audio(youtube.getVideoId()
@@ -62,10 +63,20 @@ public class AudioService {
                                             
                     audioRepository.save(audio);
                 }
+                deleteFile(uploadFile);
             }
         }
         return audio;
     }    
+
+    public void deleteFile(File file) {
+        if(file.exists()) {
+            boolean deleteResult = file.delete();
+
+            if(deleteResult) System.out.println("[AudioService] Delete Uploaded File Success");
+            else System.out.println("[AudioService] Delete Uploaded File Fail");
+        }
+    }
 
     public int getVideoLength(String videoId) {
         return extractor.getVideoLength(videoId);
