@@ -42,9 +42,11 @@ out/
 ### properties ###
 *.properties
 
-### class ###
+### Secure Important Class ###
 JwtUtil.java
 S3Util.java
+HashUtil.java
+EmailUtil.java
 
 
 ### mp3 ###

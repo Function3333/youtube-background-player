@@ -28,13 +28,21 @@ public class YoutubeDlUtil {
                 }
             });
             return Result.SUCCESS;
-        } catch (Exception e) {
+        } catch (YoutubeDLException e) {
+            try {
+                YoutubeDLRequest request = new YoutubeDLRequest(videoId, extractPath);
+                request.setOption("rm-cache-dir");
+
+                YoutubeDL.execute(request);
+            } catch (YoutubeDLException insideError) {
+                e.printStackTrace();
+                System.out.println("[YoutubeDlUtil] extractAudio rm-cache-dir failed");
+            }
             e.printStackTrace();
             return Result.EXTRACT_AUDIO_FAIL;
         }
     }
 
-    //in second
     public int parseVideLength(String lawLength) {
         int length = 0;
         

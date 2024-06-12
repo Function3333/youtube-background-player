@@ -1,5 +1,7 @@
 package com.rest.ybp.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class User {
     @Column(name = "USER_NAME", unique = true)
     private String name;
 
+    @JsonIgnore
     @Column(name = "USER_PASSWORD")
     private String password;
 

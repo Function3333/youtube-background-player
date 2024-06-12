@@ -54,7 +54,7 @@ public class playListController {
     }
 
     @DeleteMapping("/playList")
-    public Response deletePlayList(@RequestHeader("ACCESS_TOKEN")String accessToken, @RequestParam("audioId") String audioId) {
+    public Response deletePlayList(@RequestHeader("ACCESS_TOKEN") String accessToken, @RequestParam("audioId") String audioId) {
         Result result = Result.DELETE_PLAYLIST_FAIL;
         String userName = jwtUtil.parseToken(accessToken);
         

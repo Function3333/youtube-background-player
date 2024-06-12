@@ -3,6 +3,7 @@ package com.rest.ybp.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rest.ybp.common.Result;
 import com.rest.ybp.common.Token;
+import com.rest.ybp.utils.HashUtil;
 import com.rest.ybp.utils.JwtUtil;
 
 import org.springframework.stereotype.Service;
@@ -16,10 +17,12 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final HashUtil hashUtil;
     private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, HashUtil hashUtil, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.hashUtil = hashUtil;
         this.jwtUtil = jwtUtil;
     }
 
@@ -29,26 +32,29 @@ public class UserService {
         
         try {
             if(validateName(name) == Result.SUCCESS && validateEmail(email) == Result.SUCCESS) {
-                User user = new User(name, password, email);
-                userRepository.save(user);    
-                result = Result.SUCCESS;
+                String hashedPassword = hashUtil.hashPlanPassword(password);
+                
+                if(hashedPassword != null) {
+                    User user = new User(name, hashedPassword, email);
+                    userRepository.save(user);    
+                    result = Result.SUCCESS;
+                }
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("[UserService Error] signup()");
+            System.out.println("[UserService] singUp Failed");
             e.printStackTrace();
         }
         return result;
     }
 
-    @Transactional
     public Map<String, Token> login(String name, String password) throws JsonProcessingException {
         Map<String, Token> tokenMap = null;
 
         User user = userRepository.getUserByName(name);
         if(user != null) {
-            String userPassword = user.getPassword();
+            String dbPassword = user.getPassword();
 
-            if(userPassword.equals(password)) {
+            if(hashUtil.isPwdMatchHashPwd(password, dbPassword)) {
                 tokenMap = new HashMap<>();
                 
                 String accessTokenPayload = jwtUtil.generateAccessToken(user.getName());
