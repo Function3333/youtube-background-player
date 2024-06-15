@@ -1,46 +1,57 @@
 package com.rest.ybp.utils;
 
 import com.rest.ybp.common.Result;
-import com.sapher.youtubedl.*;
+
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Properties;
 
 @Component
 public class YoutubeDlUtil {
-    private static String extractPath = Paths.get(System.getProperty("user.dir"), "audio").toString();
+    private static Properties config;
+    
+    public YoutubeDlUtil() {
+        try {
+            InputStream stream = this.getClass().getResourceAsStream("/config.properties");
+
+            config = new Properties();
+            config.load(stream);    
+        } catch (IOException e) {
+            System.out.println("[YoutubeDlUtil] init config failed");
+            e.printStackTrace();
+        }
+    }
     
     public Result extractAudio(String videoId) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(
+            "yt-dlp",
+            "--extract-audio",
+            "--audio-format", "mp3",
+            "--audio-quality", "0",
+            "--output", config.getProperty("audio.savepath") + videoId + ".mp3",
+            "--rm-cache-dir",     
+            videoId
+        );
+
         try {
-            YoutubeDLRequest request = new YoutubeDLRequest(videoId, extractPath);
-            request.setOption("extract-audio");
-            request.setOption("id");
-            request.setOption("audio-format", "mp3");
-            request.setOption("retries", 10);
-            request.setOption("ignore-errors");
-            request.setOption("rm-cache-dir");
+            Process process = processBuilder.start();    
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            YoutubeDLResponse response = YoutubeDL.execute(request, new DownloadProgressCallback() {
-                @Override
-                public void onProgressUpdate(float progress, long etaInSeconds) {
-                    //여기에서 진행률을 반환 할 메서드 추가하기
-                    System.out.println(progress + "%");
-                }
-            });
-            return Result.SUCCESS;
-        } catch (YoutubeDLException e) {
-            try {
-                YoutubeDLRequest request = new YoutubeDLRequest(videoId, extractPath);
-                request.setOption("rm-cache-dir");
-
-                YoutubeDL.execute(request);
-            } catch (YoutubeDLException insideError) {
-                e.printStackTrace();
-                System.out.println("[YoutubeDlUtil] extractAudio rm-cache-dir failed");
+            String line;
+            while((line = reader.readLine()) != null) {
+                System.out.println(line);
             }
+
+            return Result.SUCCESS;
+        } catch (IOException e) {
             e.printStackTrace();
             return Result.EXTRACT_AUDIO_FAIL;
-        }
+        } 
     }
 
     public int parseVideLength(String lawLength) {
@@ -72,16 +83,27 @@ public class YoutubeDlUtil {
     }
 
     public int getVideoLength(String videoId) {
-        try {
-            YoutubeDLRequest request = new YoutubeDLRequest(videoId);
-            request.setOption("get-duration");
+        int videoLength = 0;
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(
+            "yt-dlp",
+            "--get-duration",
+            videoId
+        );
 
-            YoutubeDLResponse response = YoutubeDL.execute(request);
-            
-            return parseVideLength(response.getOut());
-        } catch (Exception e) {
+        try {
+            Process process = processBuilder.start();    
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while((line = reader.readLine()) != null) {
+                videoLength = parseVideLength(line);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            return Integer.MAX_VALUE;
-        }
+            videoLength = Integer.MAX_VALUE;
+        } 
+
+        return videoLength;
     }
 }

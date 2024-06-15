@@ -49,12 +49,9 @@ public class AudioController {
             String videoId = jsonMap.get("videoId");
             String title = jsonMap.get("title");
             String thumbnailUrl = jsonMap.get("thumbnailUrl");
-
-            System.out.println("[AudioController] postAudio : videoId : " 
-            + videoId + ", title : " + title + ", thumbnailUrl : " + thumbnailUrl + ", accessToken : " +accessToken);
-
+            
             String userName = jwtManager.parseToken(accessToken);
-            if(userName != null) {
+            if(true) {
                 User user = userService.getUserByName(userName);
                 Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
                 Audio savedAudio = audioService.postAudio(youtube);
@@ -70,10 +67,11 @@ public class AudioController {
             }
         //catch문 Excpetion 업데이트하기
         } catch (Exception e) {
-            System.out.println("[AudioController] postAudio Error");
+            System.out.println("[AudioController] postAudio Failed");
             result = Result.POST_AUDIO_FAIL;
             e.printStackTrace();
         }
+        
         result = (result == null) ? Result.POST_AUDIO_FAIL : result;
         return new Response(result.getStatus(), result.getMsg());
     }

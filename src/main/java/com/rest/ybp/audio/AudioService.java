@@ -7,7 +7,6 @@ import com.rest.ybp.youtube.Youtube;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class AudioService {
-    private static String extractPath = Paths.get(System.getProperty("user.dir"), "audio").toString();
     private static Properties configProperties;
 
     private final AudioRepository audioRepository;
@@ -42,6 +40,7 @@ public class AudioService {
         if(videoLength <= maximumVideoLength) {
             audio = uploadAudio(youtube);
         }
+
         return audio;
     }
 
@@ -52,7 +51,7 @@ public class AudioService {
             Result extractAudioResult = extractor.extractAudio(youtube.getVideoId());
 
             if(extractAudioResult == Result.SUCCESS) {
-                File uploadFile = new File(extractPath + "/" + youtube.getVideoId() + ".mp3");
+                File uploadFile = new File(configProperties.getProperty("audio.savepath") + youtube.getVideoId() + ".mp3");
                 Result uploadResult = S3Utils.uploadAudio(youtube.getVideoId() + ".mp3", uploadFile);
                 
                 if(uploadResult == Result.SUCCESS) {

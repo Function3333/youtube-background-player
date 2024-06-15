@@ -33,9 +33,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//youtube-dl
-	implementation group: 'com.github.sapher', name: 'youtubedl-java', version: 'ef1bdc8c2e3e7eac134bc4ea9fae37318e79771a'
-
 	//aws
 	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.566'

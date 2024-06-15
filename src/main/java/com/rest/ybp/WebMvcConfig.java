@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.rest.ybp.interceptor.JwtInterceptor;
 
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
     private JwtInterceptor jwtInterceptor;
@@ -13,8 +14,9 @@ public class WebMvcConfig implements WebMvcConfigurer{
     public WebMvcConfig(JwtInterceptor jwtInterceptor) {
         this.jwtInterceptor = jwtInterceptor;
     }
-
+    
     @Override
+    @SuppressWarnings("null")
     public void addInterceptors(InterceptorRegistry registry) {
         String[] excludePattern = {
             "/user", "/user/login", "/user/accessToken", "/login/validateUsername", "/login/verifyEmail"};
