@@ -1,30 +1,44 @@
 package com.rest.ybp.youtube;
 
 public class Youtube {
-    private String videoId;
-    private String videoTitle;
+    private String id;
+    private String title;
     private String thumbnailUrl;
+    private String length;   
+    private String channelTitle;
+    
+    public Youtube() {}
 
-    public Youtube(String videoId, String videoTitle, String thumnailurl) {
-        this.videoId = videoId;
-        this.videoTitle = videoTitle;
-        this.thumbnailUrl = thumnailurl; 
+    public Youtube(String id, String title, String channelTitle, String thumbnailUrl, String length) {
+        this.id = id;
+        this.title = title;
+        this.channelTitle = channelTitle;
+        this.thumbnailUrl = thumbnailUrl;
+        this.length = length;
+    }    
+
+    public String getId() {
+        return this.id;
     }
 
-    public String getVideoId() {
-        return this.videoId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setVideoId(String videoId) {
-        this.videoId = videoId;
+    public String getTitle() {
+        return this.title;
     }
 
-    public String getVideoTitle() {
-        return this.videoTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setVideoTitle(String videoTitle) {
-        this.videoTitle = videoTitle;
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+
+    public void setChannelTitle(String channelTitle) {
+        this.channelTitle = channelTitle;
     }
 
     public String getThumbnailUrl() {
@@ -33,5 +47,13 @@ public class Youtube {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getLength() {
+        return this.length;
+    }
+
+    public void setLength(String length) {
+        this.length = length;
     }
 }

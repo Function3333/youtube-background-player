@@ -35,7 +35,7 @@ public class AudioService {
     public Audio postAudio(Youtube youtube) {
         Audio audio = null;
         int maximumVideoLength = 60 * 10;
-        int videoLength = getVideoLength(youtube.getVideoId());
+        int videoLength = getVideoLength(youtube.getId());
 
         if(videoLength <= maximumVideoLength) {
             audio = uploadAudio(youtube);
@@ -46,18 +46,18 @@ public class AudioService {
 
     public Audio uploadAudio(Youtube youtube) {
         
-        Audio audio = audioRepository.getByYoutubeId(youtube.getVideoId());
+        Audio audio = audioRepository.getByYoutubeId(youtube.getId());
         if(audio == null) {
-            Result extractAudioResult = extractor.extractAudio(youtube.getVideoId());
+            Result extractAudioResult = extractor.extractAudio(youtube.getId());
 
             if(extractAudioResult == Result.SUCCESS) {
-                File uploadFile = new File(configProperties.getProperty("audio.savepath") + youtube.getVideoId() + ".mp3");
-                Result uploadResult = S3Utils.uploadAudio(youtube.getVideoId() + ".mp3", uploadFile);
+                File uploadFile = new File(configProperties.getProperty("audio.savepath") + youtube.getId() + ".mp3");
+                Result uploadResult = S3Utils.uploadAudio(youtube.getId() + ".mp3", uploadFile);
                 
                 if(uploadResult == Result.SUCCESS) {
-                    audio = new Audio(youtube.getVideoId()
-                                            ,youtube.getVideoTitle()
-                                            ,configProperties.getProperty("aws.bucketUrlPrefix") + youtube.getVideoId() + configProperties.getProperty("aws.bucketUrlPostfix")
+                    audio = new Audio(youtube.getId()
+                                            ,youtube.getTitle()
+                                            ,configProperties.getProperty("aws.bucketUrlPrefix") + youtube.getId() + configProperties.getProperty("aws.bucketUrlPostfix")
                                             ,youtube.getThumbnailUrl());
                                             
                     audioRepository.save(audio);

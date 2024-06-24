@@ -1,6 +1,8 @@
 package com.rest.ybp.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Result;
+import com.rest.ybp.youtube.Youtube;
 
 import org.springframework.stereotype.Component;
 
@@ -8,10 +10,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Component
 public class YoutubeDlUtil {
+    private static final int SEARCH_LIMIT = 5;
+
     private static Properties config;
     
     public YoutubeDlUtil() {
@@ -25,9 +31,59 @@ public class YoutubeDlUtil {
             e.printStackTrace();
         }
     }
+
+    public List<Youtube> getSearchList(String keyword) {
+        List<Youtube> youtubes = null;
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        Process process = null;
+
+        // int startIdx = SEARCH_LIMIT * pageIdx + 1;
+        // int endIdx = SEARCH_LIMIT * (pageIdx + 1);
+
+        processBuilder.command(
+            "yt-dlp",
+            "ytsearch6:" + keyword,
+            "--skip-download",
+            "--no-playlist",
+            "--print", 
+            // "{\"id\":\"%(id)s\",\"title\":\"%(title)s\",\"thumbnailUrl\":\"%(thumbnail)s\",\"length\":\"%(duration_string)s\"}"
+            "{\"id\":\"%(id)s\",\"title\":\"%(title)s\",\"thumbnailUrl\":\"%(thumbnail)s\",\"length\":\"%(duration_string)s\",\"channelTitle\":\"%(uploader)s\"}"
+        );
+        
+        try {
+            youtubes = new ArrayList<>();
+
+            process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            ObjectMapper mapper = new ObjectMapper();
+            String line;
+            
+            while((line = reader.readLine()) != null) {
+                Youtube youtube = mapper.readValue(line, Youtube.class);
+                youtubes.add(youtube);
+            }
+
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String errorLine;
+            while ((errorLine = errorReader.readLine()) != null) {
+                System.err.println("youtube DL Search Error: " + errorLine);
+            }
+
+            process.destroy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(process != null) process.destroy();
+        }
+        return youtubes;
+    }
     
     public Result extractAudio(String videoId) {
         ProcessBuilder processBuilder = new ProcessBuilder();
+        Process process = null;
+
         processBuilder.command(
             "yt-dlp",
             "--extract-audio",
@@ -39,7 +95,7 @@ public class YoutubeDlUtil {
         );
 
         try {
-            Process process = processBuilder.start();    
+            process = processBuilder.start();    
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             String line;
@@ -51,7 +107,9 @@ public class YoutubeDlUtil {
         } catch (IOException e) {
             e.printStackTrace();
             return Result.EXTRACT_AUDIO_FAIL;
-        } 
+        } finally {
+            if(process != null) process.destroy();
+        }
     }
 
     public int parseVideLength(String lawLength) {

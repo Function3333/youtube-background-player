@@ -40,7 +40,7 @@
 - 오디오 추출까지 남은시간 or 퍼센트 출력
 - playList 정렬하게 playList Entity에 저장 날짜 넣어보자
 - table의 pk들이 50씩 증가하는거 고치기
-- Youtube API를 통해 가져온 검색 결과의 정확도가 너무 낮음
+- 오디오 추출, 검색결과 페이지네이션 
 
 ### PlayList 테스트 시나리오
 - Audio 저장 시 PlayList 자동등록 [v]

@@ -22,6 +22,9 @@ public class Audio {
     @Column(name = "AUDIO_THUMBNAIL_URL")
     private String thumbnailUrl;
 
+    @Column(name = "AUDIO_LENGTH")
+    private String length;
+
     // @OneToMany(mappedBy = "audio")
     // private List<Playlist> playList;
 
@@ -57,5 +60,13 @@ public class Audio {
 
      public void setThumbnailUrl(String thumbnailUrl) {
          this.thumbnailUrl = thumbnailUrl;
+     }
+
+     public String getLength() {
+         return length;
+     }
+     
+     public void setLength(String length) {
+         this.length = length;
      }
 }

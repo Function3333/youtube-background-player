@@ -46,14 +46,15 @@ public class AudioController {
         Result result = null;
         
         try {
-            String videoId = jsonMap.get("videoId");
+            String Id = jsonMap.get("videoId");
             String title = jsonMap.get("title");
             String thumbnailUrl = jsonMap.get("thumbnailUrl");
+            String length = jsonMap.get("length");
             
             String userName = jwtManager.parseToken(accessToken);
             if(true) {
                 User user = userService.getUserByName(userName);
-                Youtube youtube = new Youtube(videoId, title, thumbnailUrl);
+                Youtube youtube = new Youtube(Id, title, thumbnailUrl, length);
                 Audio savedAudio = audioService.postAudio(youtube);
 
                 if(savedAudio != null && user != null) {
