@@ -35,7 +35,7 @@ public class AudioService {
     public Audio postAudio(Youtube youtube) {
         Audio audio = null;
         int maximumVideoLength = 60 * 10;
-        int videoLength = getVideoLength(youtube.getId());
+        int videoLength = getVideoLength(youtube.getLength());
 
         if(videoLength <= maximumVideoLength) {
             audio = uploadAudio(youtube);
@@ -57,8 +57,10 @@ public class AudioService {
                 if(uploadResult == Result.SUCCESS) {
                     audio = new Audio(youtube.getId()
                                             ,youtube.getTitle()
+                                            , youtube.getChannelTitle()
                                             ,configProperties.getProperty("aws.bucketUrlPrefix") + youtube.getId() + configProperties.getProperty("aws.bucketUrlPostfix")
-                                            ,youtube.getThumbnailUrl());
+                                            ,youtube.getThumbnailUrl()
+                                            ,youtube.getLength());
                                             
                     audioRepository.save(audio);
                 }
@@ -77,8 +79,8 @@ public class AudioService {
         }
     }
 
-    public int getVideoLength(String videoId) {
-        return extractor.getVideoLength(videoId);
+    public int getVideoLength(String length) {
+        return extractor.parseVideLength(length);
     }
 
     public Audio getAudio(String audioId) {

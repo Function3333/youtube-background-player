@@ -139,29 +139,4 @@ public class YoutubeDlUtil {
         }
         return length;
     }
-
-    public int getVideoLength(String videoId) {
-        int videoLength = 0;
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(
-            "yt-dlp",
-            "--get-duration",
-            videoId
-        );
-
-        try {
-            Process process = processBuilder.start();    
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while((line = reader.readLine()) != null) {
-                videoLength = parseVideLength(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            videoLength = Integer.MAX_VALUE;
-        } 
-
-        return videoLength;
-    }
 }
