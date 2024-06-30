@@ -19,12 +19,11 @@ public class YoutubeController {
     }
 
     @GetMapping("/youtubeSearchList")
-    public Response getSearchResults(@RequestParam("keyword") String keyword, @RequestParam(value = "nextPageToken", required = false) String nextPageToken) {
+    public Response getSearchResults(@RequestParam("keyword") String keyword, @RequestParam(value = "searchIdx", required = false) String searchIdx) {
         Response response = null;
-        System.out.println("[YoutubeController] keyword :  " + keyword);
+        System.out.println("[YoutubeController] keyword :  " + keyword + ", searchIdx : " + searchIdx);
         
-        List<Youtube> youtubeList = youtubeDlUtil.getSearchList(keyword);
-
+        List<Youtube> youtubeList = youtubeDlUtil.getSearchList(keyword, searchIdx);
         response = (youtubeList != null) ? new Response(Result.SUCCESS.getStatus(), youtubeList) 
                                     : new Response(Result.SEARCH_FAIL.getStatus(), Result.SEARCH_FAIL.getMsg());
         return response;

@@ -1,5 +1,6 @@
 package com.rest.ybp.utils;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.ybp.common.Result;
 import com.rest.ybp.youtube.Youtube;
@@ -16,7 +17,7 @@ import java.util.Properties;
 
 @Component
 public class YoutubeDlUtil {
-    private static final int SEARCH_LIMIT = 5;
+    private static final int SEARCH_LIMIT = 10;
 
     private static Properties config;
     
@@ -32,37 +33,39 @@ public class YoutubeDlUtil {
         }
     }
 
-    public List<Youtube> getSearchList(String keyword) {
-        List<Youtube> youtubes = null;
-
+    public List<Youtube> getSearchList(String keyword, String searchIdx) {
         ProcessBuilder processBuilder = new ProcessBuilder();
+        List<Youtube> youtubes = null;
         Process process = null;
 
-        // int startIdx = SEARCH_LIMIT * pageIdx + 1;
-        // int endIdx = SEARCH_LIMIT * (pageIdx + 1);
-
-        processBuilder.command(
-            "yt-dlp",
-            "ytsearch6:" + keyword,
-            "--skip-download",
-            "--no-playlist",
-            "--print", 
-            // "{\"id\":\"%(id)s\",\"title\":\"%(title)s\",\"thumbnailUrl\":\"%(thumbnail)s\",\"length\":\"%(duration_string)s\"}"
-            "{\"id\":\"%(id)s\",\"title\":\"%(title)s\",\"thumbnailUrl\":\"%(thumbnail)s\",\"length\":\"%(duration_string)s\",\"channelTitle\":\"%(uploader)s\"}"
-        );
+        int parsedPageIdx = Integer.parseInt(searchIdx);
+        int endPageIdx = SEARCH_LIMIT * (parsedPageIdx + 1);
         
         try {
-            youtubes = new ArrayList<>();
+            processBuilder.command(
+                "yt-dlp",
+                "ytsearch" + endPageIdx + ":" + keyword,
+                "--skip-download",
+                "--no-playlist",
+                "--print", 
+                "{\"id\":\"%(id)s\",\"title\":\"%(title)s\",\"thumbnailUrl\":\"%(thumbnail)s\",\"length\":\"%(duration_string)s\",\"channelTitle\":\"%(uploader)s\"}"
+            );
 
             process = processBuilder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             ObjectMapper mapper = new ObjectMapper();
-            String line;
             
+            youtubes = new ArrayList<>();
+
+            String line;
             while((line = reader.readLine()) != null) {
-                Youtube youtube = mapper.readValue(line, Youtube.class);
-                youtubes.add(youtube);
+                try {
+                    Youtube youtube = mapper.readValue(line, Youtube.class);
+                    youtubes.add(youtube);    
+                } catch (JsonMappingException e) {
+                    e.printStackTrace();
+                }
             }
 
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -70,11 +73,12 @@ public class YoutubeDlUtil {
             while ((errorLine = errorReader.readLine()) != null) {
                 System.err.println("youtube DL Search Error: " + errorLine);
             }
-
-            process.destroy();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        finally {
             if(process != null) process.destroy();
         }
         return youtubes;
