@@ -19,7 +19,7 @@ jobs:
       - name: Git Secret Reveal Step
         uses: entrostat/git-secret-action@v4
         with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-private-key: ${{secrets.GPG_PRIVATE_KEY}}
 
   build:
     runs-on: ubuntu-latest
