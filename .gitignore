@@ -51,3 +51,5 @@ EmailUtil.java
 
 ### mp3 ###
 *.mp3
+.gitsecret/keys/random_seed
+!*.secret
