@@ -23,15 +23,14 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     
-      - name: Initialize and reveal secrets
-        run: |
-          export GPG_TTY=$(tty)
-          git secret reveal -f
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      # - name: Initialize and reveal secrets
+      #   run: |
+      #     export GPG_TTY=$(tty)
+      #     git secret reveal -f
+      #   env:
+      #     GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
-      # - name: Git Secret Reveal Action
-      #   uses: entrostat/git-secret-action@v4.1.0
-      #   with:
-      #     gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          
+      - name: Git Secret Reveal Action
+        uses: entrostat/git-secret-action@v4.1.0
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
