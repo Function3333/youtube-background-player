@@ -43,13 +43,11 @@ out/
 *.properties
 
 ### Secure Important Class ###
-JwtUtil.java
-S3Util.java
-HashUtil.java
-EmailUtil.java
+#JwtUtil.java
+#S3Util.java
+#HashUtil.java
+#EmailUtil.java
 
 
 ### mp3 ###
 *.mp3
-.gitsecret/keys/random_seed
-!*.secret
