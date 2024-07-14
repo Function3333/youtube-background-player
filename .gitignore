@@ -36,8 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
-### resources ###
-**/resources/** 
+### properties ###
+application.properties
+config.properties
 
 ### mp3 ###
 *.mp3
