@@ -25,7 +25,6 @@ jobs:
 
       - name: Initialize git-secret
         run: |
-          git secret init
           git secret reveal
         env:
           GPG_TTY: /dev/tty
