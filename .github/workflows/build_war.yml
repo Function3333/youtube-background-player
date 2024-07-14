@@ -22,16 +22,17 @@ jobs:
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-
-      - name: Initialize git-secret
+    
+      - name: Initialize and reveal secrets
         run: |
-          git secret reveal
+          export GPG_TTY=$(tty)
+          git secret init
+          git secret reveal -f
         env:
-          GPG_TTY: /dev/tty
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
-      - name: Git Secret Reveal Action
-        uses: entrostat/git-secret-action@v4.1.0
-        with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+      # - name: Git Secret Reveal Action
+      #   uses: entrostat/git-secret-action@v4.1.0
+      #   with:
+      #     gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           
