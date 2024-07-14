@@ -19,13 +19,12 @@ jobs:
 
       - name: Import GPG key
         run: |
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import --pinentry-mode loopback
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
       - name: Reveal secrets
         run: |
-          export GPG_TTY=$(tty)
-          git secret reveal -f
+          git secret reveal -f --pinentry-mode loopback
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
