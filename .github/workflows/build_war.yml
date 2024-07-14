@@ -19,10 +19,10 @@ jobs:
 
       - name: Configure GPG
         run: |
-          mkdir -p ~/.gnupg
-          echo "use-agent" >> ~/.gnupg/gpg.conf
-          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          sudo mkdir -p ~/.gnupg
+          sudo echo "use-agent" >> ~/.gnupg/gpg.conf
+          sudo echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          sudo echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           gpgconf --kill gpg-agent
 
       - name: Import GPG key
