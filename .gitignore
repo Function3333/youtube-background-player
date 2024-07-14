@@ -37,17 +37,7 @@ out/
 .vscode/
 
 ### resources ###
-*/resources
-
-### properties ###
-*.properties
-
-### Secure Important Class ###
-#JwtUtil.java
-#S3Util.java
-#HashUtil.java
-#EmailUtil.java
-
+**/resources/** 
 
 ### mp3 ###
 *.mp3

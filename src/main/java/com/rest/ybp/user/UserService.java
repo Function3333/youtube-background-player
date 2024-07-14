@@ -17,12 +17,10 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final HashUtil hashUtil;
     private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, HashUtil hashUtil, JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
-        this.hashUtil = hashUtil;
         this.jwtUtil = jwtUtil;
     }
 
@@ -32,7 +30,7 @@ public class UserService {
         
         try {
             if(validateName(name) == Result.SUCCESS && validateEmail(email) == Result.SUCCESS) {
-                String hashedPassword = hashUtil.hashPlanPassword(password);
+                String hashedPassword = HashUtil.hashPlanPassword(password);
                 
                 if(hashedPassword != null) {
                     User user = new User(name, hashedPassword, email);
@@ -54,7 +52,7 @@ public class UserService {
         if(user != null) {
             String dbPassword = user.getPassword();
 
-            if(hashUtil.isPwdMatchHashPwd(password, dbPassword)) {
+            if(HashUtil.isPwdMatchHashPwd(password, dbPassword)) {
                 tokenMap = new HashMap<>();
                 
                 String accessTokenPayload = jwtUtil.generateAccessToken(user.getName());
