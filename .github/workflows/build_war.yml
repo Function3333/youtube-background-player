@@ -26,7 +26,6 @@ jobs:
       - name: Initialize and reveal secrets
         run: |
           export GPG_TTY=$(tty)
-          git secret init
           git secret reveal -f
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
