@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Reveal Secrets
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       - name: Git Secret Reveal Step
         uses: entrostat/git-secret-action@v4.1.0
         with:
