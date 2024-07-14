@@ -31,6 +31,18 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
+    - name: Create directory for properties file
+      run: mkdir -p src/main/resources
+    
+    - name: Create properties file from secrets
+      run: |
+        echo "property1=${{ secrets.APPLICATION_PROPERTIES }}" >> src/main/resources/application.properties
+        echo "property2=${{ secrets.CONFIG_PROPERTIES }}" >> src/main/resources/config.properties
+      # env:
+      #   PROPERTY1: ${{ secrets.PROPERTY1 }}
+      #   PROPERTY2: ${{ secrets.PROPERTY2 }}
+      #   PROPERTY3: ${{ secrets.PROPERTY3 }}
+
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
