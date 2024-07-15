@@ -55,7 +55,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
 	//httpClient
-	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
 
 	//json
 	implementation group: 'org.json', name: 'json', version: '20231013'
