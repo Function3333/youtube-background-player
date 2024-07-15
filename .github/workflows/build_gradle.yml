@@ -36,13 +36,9 @@ jobs:
     
     - name: Create properties file from secrets
       run: |
-        echo "property1=${{ secrets.APPLICATION_PROPERTIES }}" >> src/main/resources/application.properties
-        echo "property2=${{ secrets.CONFIG_PROPERTIES }}" >> src/main/resources/config.properties
-      # env:
-      #   PROPERTY1: ${{ secrets.PROPERTY1 }}
-      #   PROPERTY2: ${{ secrets.PROPERTY2 }}
-      #   PROPERTY3: ${{ secrets.PROPERTY3 }}
-
+        echo "${{ secrets.APPLICATION_PROPERTIES }}" >> src/main/resources/application.properties
+        echo "${{ secrets.CONFIG_PROPERTIES }}" >> src/main/resources/config.properties
+        
     - name: Build with Gradle Wrapper
       run: gradle build
 
