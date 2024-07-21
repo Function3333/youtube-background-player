@@ -18,8 +18,8 @@ jobs:
       - name: Setting environment variables
         run: |
           echo "AWS_DEFAULT_REGION=ap-northeast-2" >> $GITHUB_ENV
-          echo "AWS_SG_NAME=launch-wizard-2" >> $GITHUB_ENV
-
+          echo "AWS_SG_ID=sg-0d65bd7027650f093" >> $GITHUB_ENV  
+      
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -29,11 +29,12 @@ jobs:
 
       - name: Add Github Actions IP to Security group
         run: |
-          aws ec2 authorize-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+          aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-northeast-2
+
 
 
   #   - uses: actions/checkout@v4
