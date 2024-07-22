@@ -56,6 +56,11 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
 
+      - name: Rename WAR name
+        run: |
+          WAR_DIR=`find build/libs/ -type f -name *SNAPSHOT.war`
+          mv $WAR_DIR build/libs/ROOT.war
+
       - name: Transfer build artifacts to remote server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -66,7 +71,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp -o StrictHostKeyChecking=no -r build/libs/*SNAPSHOT.war $REMOTE_USER@$REMOTE_HOST:/home/ubuntu/build_result
+          scp -o StrictHostKeyChecking=no -r build/libs/ROOT.war $REMOTE_USER@$REMOTE_HOST:/home/ubuntu/build_result
 
       - name: Remove Github Actions IP from security group
         run: |
@@ -89,8 +94,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
+        
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
