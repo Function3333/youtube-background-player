@@ -18,15 +18,6 @@ public class WebMvcConfig implements WebMvcConfigurer{
     
     @Override
     @SuppressWarnings("null")
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-        .allowedOrigins("*") // 모든 출처 허용
-        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        .allowedHeaders("*");
-    }
-
-    @Override
-    @SuppressWarnings("null")
     public void addInterceptors(InterceptorRegistry registry) {
         String[] excludePattern = {
             "/user", "/user/login", "/user/accessToken", "/login/validateUsername", "/login/verifyEmail"};
