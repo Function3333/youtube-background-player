@@ -71,7 +71,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp -o StrictHostKeyChecking=no -r build/libs/ROOT.war $REMOTE_USER@$REMOTE_HOST:/home/ubuntu/build_result
+          scp -o StrictHostKeyChecking=no -r build/libs/ROOT.war $REMOTE_USER@$REMOTE_HOST:/home/ubuntu/data/tomcat/build_result
 
       - name: Remove Github Actions IP from security group
         run: |
