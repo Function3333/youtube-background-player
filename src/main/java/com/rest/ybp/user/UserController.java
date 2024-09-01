@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class UserController {
@@ -23,6 +26,13 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
+    @GetMapping("/")
+    public String getMethodName() {
+        String defualtJson = "Tomcat Running!";
+        return defualtJson;
+    }
+    
 
     @GetMapping("/login/verifyEmail")
     public Response sendVerifyEmail(@RequestParam("email") String inputEmail , HttpSession session) throws IOException {
