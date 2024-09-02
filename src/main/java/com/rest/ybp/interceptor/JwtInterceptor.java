@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtInterceptor implements HandlerInterceptor{
     private static final String ACCESS_TOKEN_HEADER_KEY = "ACCESS_TOKEN";
     private static final String REFRESH_TOKEN_HEADER_KEY = "REFRESH_TOKEN";
+
     private final UserService userService;    
     private final JwtUtil jwtUtil;
 
@@ -38,6 +39,12 @@ public class JwtInterceptor implements HandlerInterceptor{
         boolean interceptorResult = false;
         ObjectMapper mapper = new ObjectMapper();
         
+        String host = request.getHeader("HOST");
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+
+        System.out.println("host : " + host + ", server name : " + serverName + ", server port : " + serverPort);
+
         String accessToken = request.getHeader(ACCESS_TOKEN_HEADER_KEY);
         String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_KEY);
 
