@@ -27,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
                 "/login/validateUsername", 
                 "/login/verifyEmail"
             };
-
+        
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePattern);
