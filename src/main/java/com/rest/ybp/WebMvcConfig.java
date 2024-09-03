@@ -24,8 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer{
                 "/user", 
                 "/user/login", 
                 "/user/accessToken", 
-                "/login/validateUsername", 
-                "/login/verifyEmail"
+                "/login/validateUsername/**", 
+                "/login/verifyEmail/**"
             };
         
         registry.addInterceptor(jwtInterceptor)
