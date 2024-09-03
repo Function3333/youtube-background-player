@@ -1,6 +1,7 @@
 package com.rest.ybp.interceptor;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,17 +22,23 @@ public class JwtInterceptor implements HandlerInterceptor{
 
     private final UserService userService;    
     private final JwtUtil jwtUtil;
+    private final Properties awsConfig = new Properties();
 
     public JwtInterceptor(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
-    }
-    
-    public boolean isTokenNullOrEmpty(String token) {
-        if(token == null || token.isEmpty()) return true;
-        return false;
+        
+        initProperties();
     }
 
+    public void initProperties() {
+        try {
+            awsConfig.load(this.getClass().getResourceAsStream("/config.properties"));    
+        } catch (IOException e) {
+            System.out.println("[JwtInterceptor] Init Properties File Failed!");
+        }
+    }
+    
     @Override
     @SuppressWarnings("null")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {    
@@ -71,5 +78,10 @@ public class JwtInterceptor implements HandlerInterceptor{
         } 
 
         return interceptorResult;
+    }
+
+    public boolean isTokenNullOrEmpty(String token) {
+        if(token == null || token.isEmpty()) return true;
+        return false;
     }
 }
