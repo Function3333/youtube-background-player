@@ -19,17 +19,18 @@ public class WebMvcConfig implements WebMvcConfigurer{
     @Override
     @SuppressWarnings("null")
     public void addInterceptors(InterceptorRegistry registry) {
-        String host = "https://api.function3333.com";
         String[] excludePattern = 
             {
-                host + "/user", 
-                host + "/user/login", 
-                host + "/user/accessToken", 
-                host + "/login/validateUsername", 
-                host + "/login/verifyEmail"
+                "/",
+                "/user", 
+                "/user/login", 
+                "/user/accessToken", 
+                "/login/validateUsername", 
+                "/login/verifyEmail"
             };
-
+        
         registry.addInterceptor(jwtInterceptor)
+                .addPathPatterns("/**")
                 .excludePathPatterns(excludePattern);
     }
 }
