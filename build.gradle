@@ -36,7 +36,7 @@ dependencies {
 	//aws
 	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.566'
-	testImplementation group: 'software.amazon.awssdk', name: 's3', version: '2.21.2'
+	testImplementation group: 'software.amazon.awssdk', name: 's3', version: '2.28.1'
 
 	//queryDSL
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
