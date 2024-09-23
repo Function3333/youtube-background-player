@@ -50,3 +50,8 @@
 - Audio가 한명의 사용자에게만 등록되어있고 이후 해당 Audio 삭제 요청이 들어오면 s3 Bucket에서 삭제 [v]
 
 
+1. docker-compose 파일 수정
+  1-1. curl yt-dlp 다운로드
+  1-2 yt-dlp path에 추가(/usr/local/tomcat/bin여기에 추가하면 자동으로 잡힘)
+  1-3 yt-dlp 의존성인 python3 다운로드
+  1-4 인터셉터에서 걸리는거 해결하기

@@ -1,6 +1,7 @@
 package com.rest.ybp.interceptor;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.springframework.stereotype.Component;
@@ -20,9 +21,9 @@ public class JwtInterceptor implements HandlerInterceptor{
     private static final String ACCESS_TOKEN_HEADER_KEY = "ACCESS_TOKEN";
     private static final String REFRESH_TOKEN_HEADER_KEY = "REFRESH_TOKEN";
 
+    private final Properties awsConfig = new Properties();
     private final UserService userService;    
     private final JwtUtil jwtUtil;
-    private final Properties awsConfig = new Properties();
 
     public JwtInterceptor(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
@@ -42,15 +43,17 @@ public class JwtInterceptor implements HandlerInterceptor{
     @Override
     @SuppressWarnings("null")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {    
+        ObjectMapper mapper = new ObjectMapper();
         Result result = null;
         boolean interceptorResult = false;
-        ObjectMapper mapper = new ObjectMapper();
         
-        String host = request.getHeader("HOST");
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-
-        System.out.println("host : " + host + ", server name : " + serverName + ", server port : " + serverPort);
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            
+            System.out.println("HeaderName : " + headerName);
+            System.out.println("HeaderValue : " + request.getHeader(headerName));
+        }
 
         String accessToken = request.getHeader(ACCESS_TOKEN_HEADER_KEY);
         String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_KEY);
