@@ -6,12 +6,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: write
 
     steps: 
       - name: Create properties file from secrets
         run: |
-          echo "${{ secrets.APPLICATION_PROPERTIES }}"
-          echo "${{ secrets.CONFIG_PROPERTIES }}"
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
+          echo "${{ secrets.CONFIG_PROPERTIES }}" > ./config.properties
